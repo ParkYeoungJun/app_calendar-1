@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,23 +36,16 @@ public class ScheduleShowActivity  extends Activity {
     private static final String TAG_DATE = "date";
     private static final String TAG_MEMO = "memo";
 
-    JSONArray peoples = null;
+    JSONArray schedules = null;
 
-    ArrayList<HashMap<String, String>> personList;
+    ArrayList<HashMap<String, String>> scheduleList;
 
     ListView list;
 
-
-//    TextView scheduleText;
     TextView monthText;
     int curYear;
     int curMonth;
     int curDay;
-//
-//    ListView scheduleList;
-//    ScheduleListAdapter scheduleAdapter;
-//    ArrayList<ScheduleListItem> outScheduleList;
-//    HashMap<String,ArrayList<ScheduleListItem>> scheduleHash;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +58,7 @@ public class ScheduleShowActivity  extends Activity {
         String str_curDay = String.format("%02d", curDay);
 
         list = (ListView) findViewById(R.id.listView);
-        personList = new ArrayList<HashMap<String,String>>();
+        scheduleList = new ArrayList<HashMap<String,String>>();
 
         getData("http://52.78.88.182/getdata.php?date="+curYear+"-"+str_curMonth+"-"+str_curDay);     //날짜 지정해서 데이터 파싱
 //        getData("http://52.78.88.182/getdata.php");
@@ -87,10 +83,10 @@ public class ScheduleShowActivity  extends Activity {
             Log.e("jsonerr", "1");
             JSONObject jsonObj = new JSONObject(myJSON);
             Log.e("jsonerr", "2");
-            peoples = jsonObj.getJSONArray(TAG_RESULTS);
+            schedules = jsonObj.getJSONArray(TAG_RESULTS);
             Log.e("jsonerr", "3");
-            for(int i=0;i<peoples.length();i++){
-                JSONObject c = peoples.getJSONObject(i);
+            for(int i=0;i<schedules.length();i++){
+                JSONObject c = schedules.getJSONObject(i);
                 String id = c.getString(TAG_ID);
                 String date = c.getString(TAG_DATE);
                 String memo = c.getString(TAG_MEMO);
@@ -101,16 +97,25 @@ public class ScheduleShowActivity  extends Activity {
                 persons.put(TAG_DATE,date);
                 persons.put(TAG_MEMO,memo);
 
-                personList.add(persons);
+                scheduleList.add(persons);
             }
             Log.e("jsonerr", "4");
             ListAdapter adapter = new SimpleAdapter(
-                    ScheduleShowActivity.this, personList, R.layout.list_item,
+                    ScheduleShowActivity.this, scheduleList, R.layout.list_item,
                     new String[]{TAG_ID,TAG_DATE,TAG_MEMO},
                     new int[]{R.id.id, R.id.name, R.id.address}
             );
             Log.e("jsonerr", "5");
             list.setAdapter(adapter);
+
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                     Toast.makeText(getApplicationContext(), "hi"+id, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "hi"+scheduleList.get(position).get("date"), Toast.LENGTH_LONG).show();
+
+                }
+            });
 
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data [" + e.getMessage()+"] "+myJSON);
@@ -159,8 +164,6 @@ public class ScheduleShowActivity  extends Activity {
         GetDataJSON g = new GetDataJSON();
         g.execute(url);
     }
-
-
 
     private void setMonthText() {
         Intent it = getIntent();
