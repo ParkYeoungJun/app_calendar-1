@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 
@@ -42,6 +43,7 @@ public class CalendarMonthAdapter extends BaseAdapter {
 
 	Calendar mCalendar;
 	boolean recreateItems = false;
+	ArrayList scheduleMsg;
 
 	// schedule Hash
 	HashMap<String,ArrayList<ScheduleListItem>> scheduleHash;
@@ -228,7 +230,9 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		// create a params
 		GridView.LayoutParams params = new GridView.LayoutParams(
 				GridView.LayoutParams.FILL_PARENT,
-				70);
+				250);
+		// 120이 반차는거
+		// 250이 다차는거
 
 		// calculate row and column
 		int rowIndex = position / countColumn;
@@ -254,13 +258,16 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		boolean scheduleExist = false;
 		if (outList != null && outList.size() > 0) {
 			scheduleExist = true;
+			// 일정 추가 했으면 트루
 		}
 
 		if (position == getSelectedPosition()) {
         	itemView.setBackgroundColor(Color.YELLOW);
+
         } else {
         	if (scheduleExist) {
-        		itemView.setBackgroundColor(Color.MAGENTA);
+        		itemView.setBackgroundColor(Color.WHITE);
+				// 일정추가한거 스케줄 존재하면 밑에다가 일정 써주기
         	} else {
         		itemView.setBackgroundColor(Color.WHITE);
         	}
@@ -272,6 +279,15 @@ public class CalendarMonthAdapter extends BaseAdapter {
         	}
         }
 
+		// 이게 보니까 달력 하나 넘길때마다 아이템 pos에 settext를 하니까 이렇게 해야되는건데 흠
+		// set day message
+		scheduleMsg = getSchedule(position);
+		if (scheduleMsg != null) {
+			itemView.setMsg(items[position], scheduleMsg);
+		}
+		else {
+			itemView.setMsg(0);
+		}
 		// set weather
 		WeatherCurrentCondition outWeather = getWeather(position);
 		if (outWeather != null) {

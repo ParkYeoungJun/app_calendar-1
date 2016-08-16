@@ -15,6 +15,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ScheduleShowActivity"/>
         <activity android:name="ScheduleInputActivity" android:theme="@android:style/Theme.Dialog"> </activity>
     </application>
 
