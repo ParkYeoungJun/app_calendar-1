@@ -1,17 +1,6 @@
 package com.example.younghyeon.mycalendar3;
 
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -20,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +21,17 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 public class MainActivity extends Activity {
     public static final String TAG = "CalendarMonthViewActivity";
@@ -86,7 +85,7 @@ public class MainActivity extends Activity {
                 monthViewAdapter.notifyDataSetChanged();
 
                 outScheduleList = monthViewAdapter.getSchedule(position);
-                if (outScheduleList == null) {
+                    if (outScheduleList == null) {
                     outScheduleList = new ArrayList<ScheduleListItem>();
                 }
                 scheduleAdapter.scheduleList = outScheduleList;
@@ -101,6 +100,7 @@ public class MainActivity extends Activity {
                     }
                     else {
                         Intent intent = new Intent(getApplicationContext(), ScheduleShowActivity.class);
+//                        intent.putExtra("_outScheduleList", monthViewAdapter.getSchedule(position));
                         intent.putExtra("year", curYear);
                         intent.putExtra("month",curMonth +1);
                         intent.putExtra("day",position);
