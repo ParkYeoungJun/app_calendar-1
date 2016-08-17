@@ -43,15 +43,13 @@ public class ScheduleShowActivity  extends Activity {
         Intent it = getIntent();
         curYear = it.getExtras().getInt("year");
         curMonth = it.getExtras().getInt("month");
-        // curMonth + 1 해서 넘어 옴
         curDay = it.getExtras().getInt("day");
-        monthText.setText(curYear + "." + curMonth + "." + curDay);
+        monthText.setText(curYear + "." + (curMonth + 1) + "." + curDay);
     }
 
     public ArrayList<ScheduleListItem> getSchedule(int position) {
-        String keyStr = curYear + "-" + (curMonth - 1)+ "-" + position;
+        String keyStr = curYear + "-" + curMonth + "-" + position;
         ArrayList<ScheduleListItem> outList = scheduleHash.get(keyStr);
-
         return outList;
     }
 }

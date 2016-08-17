@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -37,7 +38,7 @@ public class CalendarMonthAdapter extends BaseAdapter {
 	int startDay;
 	int curYear;
 	int curMonth;
-
+	int tmpScheduleSize;
 	int firstDay;
 	int lastDay;
 
@@ -254,16 +255,23 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		}
 
 		// set background color
+
 		ArrayList outList = getSchedule(position);
+		// 누른 포지션의 size를 가져오는데
+		int outListSize = 0;
 		boolean scheduleExist = false;
+		if (outList != null) {
+			outListSize = outList.size();
+		}
 		if (outList != null && outList.size() > 0) {
 			scheduleExist = true;
 			// 일정 추가 했으면 트루
 		}
 
-		if (position == getSelectedPosition()) {
-        	itemView.setBackgroundColor(Color.YELLOW);
 
+		if (position == getSelectedPosition()) {
+			// 누른 곳은 노랗게 칠하고
+        	itemView.setBackgroundColor(Color.YELLOW);
         } else {
         	if (scheduleExist) {
         		itemView.setBackgroundColor(Color.WHITE);
@@ -279,15 +287,16 @@ public class CalendarMonthAdapter extends BaseAdapter {
         	}
         }
 
-		// 이게 보니까 달력 하나 넘길때마다 아이템 pos에 settext를 하니까 이렇게 해야되는건데 흠
-		// set day message
-		scheduleMsg = getSchedule(position);
-		if (scheduleMsg != null) {
-			itemView.setMsg(items[position], scheduleMsg);
+		// 일정 보여주는 거
+		if (outList != null) {
+			itemView.setMsg(items[position], outList, outListSize);
+			// 일정이 있으면 사이즈 넘겨서
 		}
 		else {
-			itemView.setMsg(0);
+			itemView.setMsg(outList);
+			// 일정 없으면 textview 없음
 		}
+
 		// set weather
 		WeatherCurrentCondition outWeather = getWeather(position);
 		if (outWeather != null) {

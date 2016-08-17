@@ -23,6 +23,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -30,6 +31,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,7 +83,6 @@ public class MainActivity extends Activity {
                 int day = curItem.getDay();
 
                 //Toast.makeText(getApplicationContext(), day + "���� ���õǾ����ϴ�.", 1000).show();
-
                 monthViewAdapter.setSelectedPosition(position);
                 monthViewAdapter.notifyDataSetChanged();
 
@@ -98,21 +99,42 @@ public class MainActivity extends Activity {
                     if (outScheduleList.size() == 0) {
                         showScheduleInput();
                         // 일정이 없을시에는 일정 추가
-                    }
-                    else {
+                    } else {
+                        //     showScheduleInput();
                         Intent intent = new Intent(getApplicationContext(), ScheduleShowActivity.class);
                         intent.putExtra("year", curYear);
-                        intent.putExtra("month",curMonth +1);
-                        intent.putExtra("day",position);
+                        intent.putExtra("month", curMonth);
+                        intent.putExtra("day", day);
                         startActivity(intent);
                         // 일정이 있을시에는 일정 보여주는 리스트 액티비티 띄워야 될 듯
-
                     }
                 }
-
                 // set schedule to the TextView
                 curPosition = position;
+            }
+        });
 
+        monthView.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
+            public void onSwipeTop() {
+                Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
+            }
+
+            public void onSwipeRight() {
+                monthViewAdapter.setPreviousMonth();
+                monthViewAdapter.notifyDataSetChanged();
+                setMonthText();
+             //   Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+            }
+
+            public void onSwipeLeft() {
+                monthViewAdapter.setNextMonth();
+                monthViewAdapter.notifyDataSetChanged();
+                setMonthText();
+             //   Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+            }
+
+            public void onSwipeBottom() {
+                Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -120,6 +142,7 @@ public class MainActivity extends Activity {
         setMonthText();
         // 2016년 8월 이거 설정
 
+        /*
         Button monthPrevious = (Button) findViewById(R.id.monthPrevious);
         monthPrevious.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -139,7 +162,7 @@ public class MainActivity extends Activity {
                 setMonthText();
             }
         });
-
+*/
 
         curPosition = -1;
 
@@ -347,6 +370,7 @@ public class MainActivity extends Activity {
                 Toast toast = Toast.makeText(getBaseContext(), "time : " + time + ", message : " + message + ", selectedWeather : " + selectedWeather, Toast.LENGTH_LONG);
                 toast.show();
                 // 일정 추가 저장시 토스트 메시지 띄우는 거
+
 
                 ScheduleListItem aItem = new ScheduleListItem(time, message);
 
