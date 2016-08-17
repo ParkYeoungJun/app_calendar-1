@@ -24,9 +24,36 @@
 		/>
 
 	<TextView
-		android:id="@+id/dayMsg"
+		android:id="@+id/dayMsg1"
 		android:layout_below="@+id/dayText"
-		android:textSize="10dp"
+		android:textSize="11dp"
+		android:layout_alignParentLeft="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@android:color/holo_blue_bright"
+		/>
+	<TextView
+		android:id="@+id/dayMsg2"
+		android:layout_below="@+id/dayMsg1"
+		android:textSize="11dp"
+		android:layout_alignParentLeft="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@android:color/holo_green_light"
+		/>
+	<TextView
+		android:id="@+id/dayMsg3"
+		android:layout_below="@+id/dayMsg2"
+		android:textSize="11dp"
+		android:layout_alignParentLeft="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@android:color/holo_orange_light"
+		/>
+	<TextView
+		android:id="@+id/dayMsg4"
+		android:layout_below="@+id/dayMsg3"
+		android:textSize="11dp"
 		android:layout_alignParentLeft="true"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

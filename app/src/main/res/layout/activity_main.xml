@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/holo_purple"
         >
+        <!--
         <Button
             android:id="@+id/monthPrevious"
             android:layout_width="45dp"
@@ -18,6 +19,7 @@
             android:gravity="center_horizontal"
             android:layout_alignParentLeft="true"
             />
+            -->
         <TextView
             android:id="@+id/monthText"
             android:layout_width="160dp"
@@ -34,15 +36,16 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:background="@drawable/plus2"
-            android:layout_toLeftOf="@+id/monthNext"
+            android:layout_alignParentRight="true"
             />
         <ImageButton
             android:id="@+id/settingButton"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:background="@drawable/setting"
-            android:layout_toRightOf="@+id/monthPrevious"
+            android:layout_alignParentLeft="true"
             />
+        <!--
         <Button
             android:id="@+id/monthNext"
             android:layout_width="45dp"
@@ -51,6 +54,7 @@
             android:gravity="center_horizontal"
             android:layout_alignParentRight="true"
             />
+            -->
     </RelativeLayout>
     <LinearLayout
         android:orientation="horizontal"
@@ -153,6 +157,7 @@
         android:horizontalSpacing="1dp"
         android:numColumns="7"
         />
+
     <RelativeLayout
         android:id="@+id/scheduleLayout"
         android:layout_width="fill_parent"
