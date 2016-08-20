@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +43,7 @@ public class MainActivity extends Activity {
 
     int curYear;
     int curMonth;
+    int selectedDay;
 
     int curPosition;
     EditText scheduleInput;
@@ -77,6 +79,7 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MonthItem curItem = (MonthItem) monthViewAdapter.getItem(position);
                 int day = curItem.getDay();
+                selectedDay = curItem.getDay();
 
                 //Toast.makeText(getApplicationContext(), day + "���� ���õǾ����ϴ�.", 1000).show();
                 monthViewAdapter.setSelectedPosition(position);
@@ -91,7 +94,7 @@ public class MainActivity extends Activity {
                 scheduleAdapter.notifyDataSetChanged();
 
                 // show ScheduleInputActivity if the position is already selected
-                if (position == curPosition) {
+                if (position == curPosition && selectedDay != 0) {
                     if (outScheduleList.size() == 0) {
                         showScheduleInput();
                         // 일정이 없을시에는 일정 추가
@@ -342,8 +345,14 @@ public class MainActivity extends Activity {
 
     private void showScheduleInput() {
         Intent intent = new Intent(this, ScheduleInputActivity.class);
+        intent.putExtra("year", curYear);
+        intent.putExtra("month", curMonth);
+        intent.putExtra("day", selectedDay);
+        Log.e("jsonerr", ""+selectedDay);
 
         int todayPosition = monthViewAdapter.getTodayPosition();
+
+
         WeatherCurrentCondition weather = monthViewAdapter.getWeather(monthViewAdapter.todayYear, monthViewAdapter.todayMonth, todayPosition);
         if (weather != null) {
             String weatherIconUrl = weather.getIconURL();
