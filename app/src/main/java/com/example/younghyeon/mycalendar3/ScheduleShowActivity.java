@@ -168,9 +168,8 @@ public class ScheduleShowActivity  extends Activity {
     private void setMonthText() {
         Intent it = getIntent();
         curYear = it.getExtras().getInt("year");
-        curMonth = it.getExtras().getInt("month");
+        curMonth = it.getExtras().getInt("month")+1;
 
-        // curMonth + 1 해서 넘어 옴
         curDay = it.getExtras().getInt("day");
 
         monthText.setText(curYear + "." + curMonth + "." + curDay);

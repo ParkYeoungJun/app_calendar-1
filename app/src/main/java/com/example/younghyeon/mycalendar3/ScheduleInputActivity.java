@@ -1,10 +1,5 @@
 package com.example.younghyeon.mycalendar3;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -18,6 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TimePicker;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class ScheduleInputActivity extends Activity {
     public static final String TAG = "ScheduleInputActivity";
