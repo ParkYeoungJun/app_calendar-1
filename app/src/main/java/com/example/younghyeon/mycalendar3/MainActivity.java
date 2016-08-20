@@ -116,6 +116,9 @@ public class MainActivity extends Activity {
             }
         });
 
+
+
+
         monthText = (TextView) findViewById(R.id.monthText);
         setMonthText();
         // 2016년 8월 이거 설정
