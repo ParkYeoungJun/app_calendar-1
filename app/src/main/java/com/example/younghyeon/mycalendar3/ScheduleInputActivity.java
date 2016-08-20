@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,7 +43,7 @@ public class ScheduleInputActivity extends Activity {
     int curYear, curMonth, curDay;
     int selectedHour, selectedMin;
     String sqlTimeStr = "";
-
+    String memo = "";
 
     int selectedWeather = 0;
 
@@ -109,9 +110,11 @@ public class ScheduleInputActivity extends Activity {
 
                 sqlTimeStr = curYear + "-" + String.format("%02d", curMonth) + "-" + String.format("%02d", curDay);
                 sqlTimeStr += " " +  String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMin) + ":00";
+                memo = messageStr;
                 Log.e("jsonerr", "sqlTimeStr : "+sqlTimeStr);
 
-
+                postData("http://52.78.88.182/insertdata.php");
+                Log.e("jsonerr", "postData");
 
 
                 Intent intent = new Intent();
@@ -204,6 +207,8 @@ public class ScheduleInputActivity extends Activity {
 
                 int curHour = calendar.get(Calendar.HOUR_OF_DAY);
                 int curMinute = calendar.get(Calendar.MINUTE);
+//                selectedHour = calendar.get(Calendar.HOUR_OF_DAY);
+//                selectedMin = calendar.get(Calendar.MINUTE);
 
                 return new TimePickerDialog(this,  timeSetListener,  curHour, curMinute, false);
             default:
@@ -220,8 +225,8 @@ public class ScheduleInputActivity extends Activity {
             selectedCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             selectedCalendar.set(Calendar.MINUTE, minute);
 
-            selectedHour = hourOfDay;
-            selectedMin = minute;
+//            selectedHour = hourOfDay;
+//            selectedMin = minute;
 
             Date curDate = selectedCalendar.getTime();
             setSelectedDate(curDate);
@@ -230,6 +235,8 @@ public class ScheduleInputActivity extends Activity {
 
     private void setSelectedDate(Date curDate) {
         selectedDate = curDate;
+        selectedHour = selectedDate.getHours();
+        selectedMin = selectedDate.getMinutes();
         String selectedTimeStr = timeFormat.format(curDate);
         timeButton.setText(selectedTimeStr);
     }
@@ -239,26 +246,63 @@ public class ScheduleInputActivity extends Activity {
 
             @Override
             protected String doInBackground(String... params) {
-
-                String uri = params[0];
-                JSONObject jsonObj = new JSONObject();
-                jsonObj.put("date", sqlTimeStr);
-                BufferedWriter bufferedWriter = null;
-//                BufferedReader bufferedReader = null;
                 try {
+//                    ArrayList<NameValue>
+
+                    String uri = params[0];
+                    JSONObject jsonObj = new JSONObject();
+                    jsonObj.put("date", sqlTimeStr);
+                    jsonObj.put("memo", memo);
+
+
+                    BufferedWriter bufferedWriter = null;
+//                BufferedReader bufferedReader = null;
+                    Log.e("jsonerr", "write_json0 : " + jsonObj.toString());
                     URL url = new URL(uri);
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
                     StringBuilder sb = new StringBuilder();
+                    Log.e("jsonerr", "write_json1 : " + jsonObj.toString());
+                    con.setDoOutput(true);
+                    Log.e("jsonerr", "write_json2 : " + jsonObj.toString());
 
+                    String data ="&" + URLEncoder.encode("data", "UTF-8") + "="+ jsonObj.toString();
 
-                    bufferedWriter = new BufferedWriter(new OutputStreamWriter(con.getOutputStream()));
+                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                    Log.e("jsonerr", "write_json3 : " + jsonObj.toString());
+//                    wr.write(jsonObj.toString());//onPreExecute 메소드의 data 변수의 파라미터 내용을 POST 전송명령
+                    wr.write(data);
+//                    Log.e("jsonerr", "write() : ");
+
+                    wr.flush();
+
+                    //OutputStream os = con.getOutputStream();
+                    Log.e("jsonerr", "write_json6 : " + jsonObj.toString());
+                    //BufferedWriter writer = new BufferedWriter(
+                      //      new OutputStreamWriter(os, "UTF-8"));
+                    Log.e("jsonerr", "write_json2 : " + jsonObj.toString());
+                    //os.write(jsonObj.toString().getBytes());
+
+//                    bufferedWriter = new BufferedWriter(new OutputStreamWriter(con.getOutputStream()));
 //                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
-                    bufferedWriter.write();
-                    String json;
-                    while((json = bufferedReader.readLine())!= null){
-                        sb.append(json+"\n");
+//                    bufferedWriter.write(jsonObj);
+                    //bufferedWriter.write(jsonObj.toString());
+                    Log.e("jsonerr", "write_json3 : " + jsonObj.toString());
+//                    String json;
+//                    while((json = bufferedReader.readLine())!= null){
+//                        sb.append(json+"\n");
+//                    }
+
+                    BufferedReader reader=new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String line=null;
+                    while((line=reader.readLine())!=null){
+                        //서버응답값을 String 형태로 추가함
+                        Log.e("jsonerr", "Read : " + line+"\n");
                     }
+
+
+
+
 
                     return sb.toString().trim();
 
@@ -270,13 +314,15 @@ public class ScheduleInputActivity extends Activity {
 
             }
 
+
             @Override
             protected void onPostExecute(String result){
-                myJSON=result;
-                showList();
+                Log.e("jsonerr", "result : "+ result);
+//                myJSON=result;
+//                showList();
             }
         }
-        GetDataJSON g = new GetDataJSON();
+        postDataJSON g = new postDataJSON();
         g.execute(url);
     }
 
