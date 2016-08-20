@@ -174,8 +174,8 @@ public class ScheduleShowActivity  extends Activity {
         curDay = it.getExtras().getInt("day");
 
         monthText.setText(curYear + "." + curMonth + "." + curDay);
+
     }
-//
 //    public ArrayList<ScheduleListItem> getSchedule(int position) {
 //        String keyStr = curYear + "-" + (curMonth - 1)+ "-" + position;
 //        ArrayList<ScheduleListItem> outList = scheduleHash.get(keyStr);
