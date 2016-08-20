@@ -91,13 +91,13 @@ public class ScheduleShowActivity  extends Activity {
                 String date = c.getString(TAG_DATE);
                 String memo = c.getString(TAG_MEMO);
 
-                HashMap<String,String> persons = new HashMap<String,String>();
+                HashMap<String,String> h_schedules = new HashMap<String,String>();
 
-                persons.put(TAG_ID,id);
-                persons.put(TAG_DATE,date);
-                persons.put(TAG_MEMO,memo);
+                h_schedules.put(TAG_ID,id);
+                h_schedules.put(TAG_DATE,date);
+                h_schedules.put(TAG_MEMO,memo);
 
-                scheduleList.add(persons);
+                scheduleList.add(h_schedules);
             }
             Log.e("jsonerr", "4");
             ListAdapter adapter = new SimpleAdapter(

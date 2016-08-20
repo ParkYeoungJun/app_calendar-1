@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +15,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TimePicker;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,6 +39,11 @@ public class ScheduleInputActivity extends Activity {
     ImageView weather03Button;
     ImageView weather04Button;
 
+    int curYear, curMonth, curDay;
+    int selectedHour, selectedMin;
+    String sqlTimeStr = "";
+
+
     int selectedWeather = 0;
 
     public static final int DIALOG_TIME = 1101;
@@ -43,6 +57,12 @@ public class ScheduleInputActivity extends Activity {
         setContentView(R.layout.schedule_input);
 
         setTitle("일정 추가");
+
+        Intent it = getIntent();
+        curYear = it.getExtras().getInt("year");
+        curMonth = it.getExtras().getInt("month")+1;
+        curDay = it.getExtras().getInt("day");
+
 
         messageInput = (EditText) findViewById(R.id.messageInput);
 
@@ -86,6 +106,13 @@ public class ScheduleInputActivity extends Activity {
             public void onClick(View v) {
                 String messageStr = messageInput.getText().toString();
                 String timeStr = timeButton.getText().toString();
+
+                sqlTimeStr = curYear + "-" + String.format("%02d", curMonth) + "-" + String.format("%02d", curDay);
+                sqlTimeStr += " " +  String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMin) + ":00";
+                Log.e("jsonerr", "sqlTimeStr : "+sqlTimeStr);
+
+
+
 
                 Intent intent = new Intent();
                 intent.putExtra("time", timeStr);
@@ -163,6 +190,7 @@ public class ScheduleInputActivity extends Activity {
         switch (id) {
             case DIALOG_TIME:
                 String timeStr = timeButton.getText().toString();
+                Log.e("jsonerr", "timeStr : "+timeStr);
 
                 Calendar calendar = Calendar.getInstance();
                 Date curDate = new Date();
@@ -192,6 +220,9 @@ public class ScheduleInputActivity extends Activity {
             selectedCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             selectedCalendar.set(Calendar.MINUTE, minute);
 
+            selectedHour = hourOfDay;
+            selectedMin = minute;
+
             Date curDate = selectedCalendar.getTime();
             setSelectedDate(curDate);
         }
@@ -199,9 +230,54 @@ public class ScheduleInputActivity extends Activity {
 
     private void setSelectedDate(Date curDate) {
         selectedDate = curDate;
-
         String selectedTimeStr = timeFormat.format(curDate);
         timeButton.setText(selectedTimeStr);
+    }
+
+    public void postData(String url){
+        class postDataJSON extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                String uri = params[0];
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put("date", sqlTimeStr);
+                BufferedWriter bufferedWriter = null;
+//                BufferedReader bufferedReader = null;
+                try {
+                    URL url = new URL(uri);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    StringBuilder sb = new StringBuilder();
+
+
+                    bufferedWriter = new BufferedWriter(new OutputStreamWriter(con.getOutputStream()));
+//                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                    bufferedWriter.write();
+                    String json;
+                    while((json = bufferedReader.readLine())!= null){
+                        sb.append(json+"\n");
+                    }
+
+                    return sb.toString().trim();
+
+                }catch(Exception e){
+                    return null;
+                }
+
+
+
+            }
+
+            @Override
+            protected void onPostExecute(String result){
+                myJSON=result;
+                showList();
+            }
+        }
+        GetDataJSON g = new GetDataJSON();
+        g.execute(url);
     }
 
 }
