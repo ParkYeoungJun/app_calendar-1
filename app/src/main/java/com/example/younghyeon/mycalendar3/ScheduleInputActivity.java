@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -106,6 +107,13 @@ public class ScheduleInputActivity extends Activity {
         saveButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 String messageStr = messageInput.getText().toString();
+                if(messageStr.isEmpty())
+                {
+                    Toast.makeText(getApplicationContext(), "메모를 입력하세요", Toast.LENGTH_SHORT).show();
+                    return ;
+                }
+
+
                 String timeStr = timeButton.getText().toString();
 
                 sqlTimeStr = curYear + "-" + String.format("%02d", curMonth) + "-" + String.format("%02d", curDay);
@@ -114,6 +122,7 @@ public class ScheduleInputActivity extends Activity {
                 Log.e("jsonerr", "sqlTimeStr : "+sqlTimeStr);
 
                 postData("http://52.78.88.182/insertdata.php");
+
                 Log.e("jsonerr", "postData");
 
 
