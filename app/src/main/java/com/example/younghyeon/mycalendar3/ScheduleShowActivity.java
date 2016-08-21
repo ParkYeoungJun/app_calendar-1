@@ -8,7 +8,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -48,6 +50,7 @@ public class ScheduleShowActivity  extends Activity {
     int curYear;
     int curMonth;
     int curDay;
+//    ListAdapter adapter;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +105,8 @@ public class ScheduleShowActivity  extends Activity {
                 scheduleList.add(h_schedules);
             }
             Log.e("jsonerr", "4");
-            ListAdapter adapter = new SimpleAdapter(
+//            adapter = new SimpleAdapter(
+            final ListAdapter adapter = new SimpleAdapter(
                     ScheduleShowActivity.this, scheduleList, R.layout.list_item,
                     new String[]{TAG_ID,TAG_DATE,TAG_MEMO},
                     new int[]{R.id.id, R.id.name, R.id.address}
@@ -114,12 +118,26 @@ public class ScheduleShowActivity  extends Activity {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Log.e("jsonerr", "long : " + i + ", " + l);
+                    final int fin_i = i;
+                    final Adapter adapter = adapterView.getAdapter();
+
+
 //                    Toast.makeText(getApplicationContext(), "long"+, Toast.LENGTH_LONG).show();
                     AlertDialog.Builder alert_confirm = new AlertDialog.Builder(ScheduleShowActivity.this);
                     alert_confirm.setMessage("이 메모를 삭제하시겠습니까?").setCancelable(false).setPositiveButton("확인",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    String str_id = scheduleList.get(fin_i).get("id");
+                                    deleteData("http://52.78.88.182/deletedata.php?id="+str_id);
+                                    Log.e("jsonerr", "fin_i " + scheduleList.get(fin_i));
+
+                                    scheduleList.remove(fin_i);
+                                    if (adapter instanceof BaseAdapter) {
+                                        ((BaseAdapter)adapter).notifyDataSetChanged();
+                                    } else {
+                                        throw new RuntimeException("Unexpected adapter");
+                                    }
                                     Log.e("jsonerr", "Yes");
                                 }
                             }).setNegativeButton("취소",
@@ -151,6 +169,45 @@ public class ScheduleShowActivity  extends Activity {
             e.printStackTrace();
         }
 
+    }
+
+    public void deleteData(String url){
+        class deleteDataJSON extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                String uri = params[0];
+//                Log.e("jsonerr", "delete" + 1);
+                BufferedReader bufferedReader = null;
+                try {
+                    URL url = new URL(uri);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    StringBuilder sb = new StringBuilder();
+
+                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+//                    Log.e("jsonerr", "delete" + 23);
+                    String json;
+                    while((json = bufferedReader.readLine())!= null){
+                        sb.append(json+"\n");
+                    }
+//                    Log.e("jsonerr", "delete" + 4);
+//                    Log.e("jsonerr", "delete" + 2);
+                    return sb.toString().trim();
+
+                }catch(Exception e){
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String result){
+//                myJSON=result;
+//                showList();
+            }
+        }
+        deleteDataJSON g = new deleteDataJSON();
+        g.execute(url);
     }
 
     public void getData(String url){
@@ -190,6 +247,8 @@ public class ScheduleShowActivity  extends Activity {
         GetDataJSON g = new GetDataJSON();
         g.execute(url);
     }
+
+
 
     private void setMonthText() {
         Intent it = getIntent();
