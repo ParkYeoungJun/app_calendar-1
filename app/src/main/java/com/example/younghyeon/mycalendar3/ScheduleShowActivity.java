@@ -1,6 +1,8 @@
 package com.example.younghyeon.mycalendar3;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -108,14 +110,41 @@ public class ScheduleShowActivity  extends Activity {
             Log.e("jsonerr", "5");
             list.setAdapter(adapter);
 
+            list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Log.e("jsonerr", "long : " + i + ", " + l);
+//                    Toast.makeText(getApplicationContext(), "long"+, Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder alert_confirm = new AlertDialog.Builder(ScheduleShowActivity.this);
+                    alert_confirm.setMessage("이 메모를 삭제하시겠습니까?").setCancelable(false).setPositiveButton("확인",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Log.e("jsonerr", "Yes");
+                                }
+                            }).setNegativeButton("취소",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Log.e("jsonerr", "No");
+                                    return;
+                                }
+                            });
+                    AlertDialog alert = alert_confirm.create();
+                    alert.show();
+
+                    return true;
+                }
+            });
+
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                     Toast.makeText(getApplicationContext(), "hi"+id, Toast.LENGTH_LONG).show();
                     Toast.makeText(getApplicationContext(), "hi"+scheduleList.get(position).get("date"), Toast.LENGTH_LONG).show();
-
                 }
             });
+
 
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data [" + e.getMessage()+"] "+myJSON);
@@ -150,9 +179,6 @@ public class ScheduleShowActivity  extends Activity {
                 }catch(Exception e){
                     return null;
                 }
-
-
-
             }
 
             @Override

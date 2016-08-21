@@ -1,12 +1,5 @@
 package com.example.younghyeon.mycalendar3;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.StringTokenizer;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.text.format.Time;
@@ -15,9 +8,14 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 
 public class CalendarMonthAdapter extends BaseAdapter {
 
