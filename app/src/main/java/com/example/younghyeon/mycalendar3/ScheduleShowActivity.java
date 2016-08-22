@@ -121,7 +121,6 @@ public class ScheduleShowActivity  extends Activity {
                     final int fin_i = i;
                     final Adapter adapter = adapterView.getAdapter();
 
-
 //                    Toast.makeText(getApplicationContext(), "long"+, Toast.LENGTH_LONG).show();
                     AlertDialog.Builder alert_confirm = new AlertDialog.Builder(ScheduleShowActivity.this);
                     alert_confirm.setMessage("이 메모를 삭제하시겠습니까?").setCancelable(false).setPositiveButton("확인",
@@ -160,6 +159,8 @@ public class ScheduleShowActivity  extends Activity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                     Toast.makeText(getApplicationContext(), "hi"+id, Toast.LENGTH_LONG).show();
                     Toast.makeText(getApplicationContext(), "hi"+scheduleList.get(position).get("date"), Toast.LENGTH_LONG).show();
+
+
                 }
             });
 
