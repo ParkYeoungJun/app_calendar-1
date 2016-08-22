@@ -199,7 +199,6 @@ public class CalendarMonthAdapter extends BaseAdapter {
 
 	        // save as a data item
 	        items[i] = new MonthItem(dayNumber);
-			items[i].setPos(i);
 		}
 	}
 
