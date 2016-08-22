@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -20,7 +18,6 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -30,23 +27,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class ScheduleInputActivity extends Activity {
-    public static final String TAG = "ScheduleInputActivity";
+public class ScheduleUpdateActivity extends Activity {
+    public static final String TAG = "ScheduleUpdateActivity";
 
     EditText messageInput;
     Button timeButton;
-
-    ImageView weather01Button;
-    ImageView weather02Button;
-    ImageView weather03Button;
-    ImageView weather04Button;
 
     int curYear, curMonth, curDay;
     int selectedHour, selectedMin;
     String sqlTimeStr = "";
     String memo = "";
-
-    int selectedWeather = 0;
 
     public static final int DIALOG_TIME = 1101;
 
@@ -56,7 +46,7 @@ public class ScheduleInputActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.schedule_input);
+        setContentView(R.layout.schedule_update);
 
         setTitle("일정 추가");
 
@@ -65,45 +55,16 @@ public class ScheduleInputActivity extends Activity {
         curMonth = it.getExtras().getInt("month")+1;
         curDay = it.getExtras().getInt("day");
 
+        messageInput = (EditText) findViewById(R.id.u_messageInput);
 
-        messageInput = (EditText) findViewById(R.id.messageInput);
-
-        timeButton = (Button) findViewById(R.id.timeButton);
+        timeButton = (Button) findViewById(R.id.u_timeButton);
         timeButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 showDialog(DIALOG_TIME);
             }
         });
 
-        weather01Button = (ImageView) findViewById(R.id.weather01Button);
-        weather01Button.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                selectWeatherButton(0);
-            }
-        });
-
-        weather02Button = (ImageView) findViewById(R.id.weather02Button);
-        weather02Button.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                selectWeatherButton(1);
-            }
-        });
-
-        weather03Button = (ImageView) findViewById(R.id.weather03Button);
-        weather03Button.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                selectWeatherButton(2);
-            }
-        });
-
-        weather04Button = (ImageView) findViewById(R.id.weather04Button);
-        weather04Button.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                selectWeatherButton(3);
-            }
-        });
-
-        Button saveButton = (Button) findViewById(R.id.saveButton);
+        Button saveButton = (Button) findViewById(R.id.u_saveButton);
         saveButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 String messageStr = messageInput.getText().toString();
@@ -113,7 +74,6 @@ public class ScheduleInputActivity extends Activity {
                     return ;
                 }
 
-
                 String timeStr = timeButton.getText().toString();
 
                 sqlTimeStr = curYear + "-" + String.format("%02d", curMonth) + "-" + String.format("%02d", curDay);
@@ -121,7 +81,7 @@ public class ScheduleInputActivity extends Activity {
                 memo = messageStr;
                 Log.e("jsonerr", "sqlTimeStr : "+sqlTimeStr);
 
-                postData("http://52.78.88.182/insertdata.php");
+                updateData("http://52.78.88.182/updatedata.php");
 
                 Log.e("jsonerr", "postData");
 
@@ -129,7 +89,6 @@ public class ScheduleInputActivity extends Activity {
                 Intent intent = new Intent();
                 intent.putExtra("time", timeStr);
                 intent.putExtra("message", messageStr);
-                intent.putExtra("weather", selectedWeather);
 
                 setResult(RESULT_OK, intent);
 
@@ -137,7 +96,7 @@ public class ScheduleInputActivity extends Activity {
             }
         });
 
-        Button closeButton = (Button) findViewById(R.id.closeButton);
+        Button closeButton = (Button) findViewById(R.id.u_closeButton);
         closeButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 finish();
@@ -150,52 +109,6 @@ public class ScheduleInputActivity extends Activity {
         setSelectedDate(curDate);
 
         // process the passed intent
-        Intent intent = getIntent();
-        String weatherIconUrl = intent.getStringExtra("weatherIconUrl");
-        if (weatherIconUrl != null) {
-            File iconFile = new File(weatherIconUrl);
-            String iconFileName = iconFile.getName();
-            Log.d(TAG, "weather icon file name : " + iconFileName);
-
-            if (iconFileName != null) {
-                if (iconFileName.equals("sunny.gif")) {
-                    selectWeatherButton(0);
-                } else if (iconFileName.equals("cloudy.gif")) {
-                    selectWeatherButton(1);
-                } else if (iconFileName.equals("rain.gif")) {
-                    selectWeatherButton(2);
-                } else if (iconFileName.equals("snow.gif")) {
-                    selectWeatherButton(3);
-                } else {
-                    Log.d(TAG, "weather icon is not found.");
-                    selectWeatherButton(0);
-                }
-            } else {
-                selectWeatherButton(0);
-            }
-        } else {
-            selectWeatherButton(0);
-        }
-
-    }
-
-    private void selectWeatherButton(int index) {
-        selectedWeather = index;
-
-        weather01Button.setBackgroundColor(Color.WHITE);
-        weather02Button.setBackgroundColor(Color.WHITE);
-        weather03Button.setBackgroundColor(Color.WHITE);
-        weather04Button.setBackgroundColor(Color.WHITE);
-
-        if (selectedWeather == 0) {
-            weather01Button.setBackgroundColor(Color.RED);
-        } else if (selectedWeather == 1) {
-            weather02Button.setBackgroundColor(Color.RED);
-        } else if (selectedWeather == 2) {
-            weather03Button.setBackgroundColor(Color.RED);
-        } else if (selectedWeather == 3) {
-            weather04Button.setBackgroundColor(Color.RED);
-        }
     }
 
     protected Dialog onCreateDialog(int id) {
@@ -216,8 +129,6 @@ public class ScheduleInputActivity extends Activity {
 
                 int curHour = calendar.get(Calendar.HOUR_OF_DAY);
                 int curMinute = calendar.get(Calendar.MINUTE);
-//                selectedHour = calendar.get(Calendar.HOUR_OF_DAY);
-//                selectedMin = calendar.get(Calendar.MINUTE);
 
                 return new TimePickerDialog(this,  timeSetListener,  curHour, curMinute, false);
             default:
@@ -234,9 +145,6 @@ public class ScheduleInputActivity extends Activity {
             selectedCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             selectedCalendar.set(Calendar.MINUTE, minute);
 
-//            selectedHour = hourOfDay;
-//            selectedMin = minute;
-
             Date curDate = selectedCalendar.getTime();
             setSelectedDate(curDate);
         }
@@ -250,22 +158,18 @@ public class ScheduleInputActivity extends Activity {
         timeButton.setText(selectedTimeStr);
     }
 
-    public void postData(String url){
-        class postDataJSON extends AsyncTask<String, Void, String> {
+    public void updateData(String url){
+        class updateDataJSON extends AsyncTask<String, Void, String> {
 
             @Override
             protected String doInBackground(String... params) {
                 try {
-//                    ArrayList<NameValue>
-
                     String uri = params[0];
                     JSONObject jsonObj = new JSONObject();
                     jsonObj.put("date", sqlTimeStr);
                     jsonObj.put("memo", memo);
 
-
                     BufferedWriter bufferedWriter = null;
-//                BufferedReader bufferedReader = null;
                     Log.e("jsonerr", "write_json0 : " + jsonObj.toString());
                     URL url = new URL(uri);
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -331,7 +235,7 @@ public class ScheduleInputActivity extends Activity {
 //                showList();
             }
         }
-        postDataJSON g = new postDataJSON();
+        updateDataJSON g = new updateDataJSON();
         g.execute(url);
     }
 

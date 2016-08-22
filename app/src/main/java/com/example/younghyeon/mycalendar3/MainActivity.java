@@ -30,9 +30,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -45,6 +43,17 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 public class MainActivity extends Activity {
     public static final String TAG = "CalendarMonthViewActivity";
 
@@ -56,6 +65,7 @@ public class MainActivity extends Activity {
 
     int curYear;
     int curMonth;
+    int selectedDay;
 
     int curPosition;
     EditText scheduleInput;
@@ -95,13 +105,14 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MonthItem curItem = (MonthItem) monthViewAdapter.getItem(position);
                 int day = curItem.getDay();
+                selectedDay = curItem.getDay();
 
                 //Toast.makeText(getApplicationContext(), day + "���� ���õǾ����ϴ�.", 1000).show();
                 monthViewAdapter.setSelectedPosition(position);
                 monthViewAdapter.notifyDataSetChanged();
 
                 outScheduleList = monthViewAdapter.getSchedule(position);
-                if (outScheduleList == null) {
+                    if (outScheduleList == null) {
                     outScheduleList = new ArrayList<ScheduleListItem>();
                 }
 
@@ -110,13 +121,14 @@ public class MainActivity extends Activity {
                 scheduleAdapter.notifyDataSetChanged();
 
                 // show ScheduleInputActivity if the position is already selected
-                if (position == curPosition) {
+                if (position == curPosition && selectedDay != 0) {
                     if (outScheduleList.size() == 0) {
                         showScheduleInput();
                         // 일정이 없을시에는 일정 추가
                     } else {
                         //     showScheduleInput();
                         Intent intent = new Intent(getApplicationContext(), ScheduleShowActivity.class);
+//                        intent.putExtra("_outScheduleList", monthViewAdapter.getSchedule(position));
                         intent.putExtra("year", curYear);
                         intent.putExtra("month", curMonth);
                         intent.putExtra("day", day);
@@ -152,6 +164,9 @@ public class MainActivity extends Activity {
                 Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+
 
         monthText = (TextView) findViewById(R.id.monthText);
         setMonthText();
@@ -356,8 +371,14 @@ public class MainActivity extends Activity {
 
     private void showScheduleInput() {
         Intent intent = new Intent(this, ScheduleInputActivity.class);
+        intent.putExtra("year", curYear);
+        intent.putExtra("month", curMonth);
+        intent.putExtra("day", selectedDay);
+        Log.e("jsonerr", ""+selectedDay);
 
         int todayPosition = monthViewAdapter.getTodayPosition();
+
+
         WeatherCurrentCondition weather = monthViewAdapter.getWeather(monthViewAdapter.todayYear, monthViewAdapter.todayMonth, todayPosition);
         if (weather != null) {
             String weatherIconUrl = weather.getIconURL();
