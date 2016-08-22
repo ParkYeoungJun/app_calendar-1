@@ -15,7 +15,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -123,7 +122,7 @@ public class ScheduleShowActivity  extends Activity {
 
 //                    Toast.makeText(getApplicationContext(), "long"+, Toast.LENGTH_LONG).show();
                     AlertDialog.Builder alert_confirm = new AlertDialog.Builder(ScheduleShowActivity.this);
-                    alert_confirm.setMessage("이 메모를 삭제하시겠습니까?").setCancelable(false).setPositiveButton("확인",
+                    alert_confirm.setMessage("이 일정을 삭제하시겠습니까?").setCancelable(false).setPositiveButton("확인",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -154,13 +153,17 @@ public class ScheduleShowActivity  extends Activity {
                 }
             });
 
+
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                     Toast.makeText(getApplicationContext(), "hi"+id, Toast.LENGTH_LONG).show();
-                    Toast.makeText(getApplicationContext(), "hi"+scheduleList.get(position).get("date"), Toast.LENGTH_LONG).show();
-
-
+//                    Toast.makeText(getApplicationContext(), "hi"+scheduleList.get(position).get("date"), Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(), ScheduleInputActivity.class);
+                    intent.putExtra("year", curYear);
+                    intent.putExtra("month", curMonth);
+                    intent.putExtra("position", position);
+                    startActivity(intent);
                 }
             });
 

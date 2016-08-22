@@ -46,7 +46,7 @@ public class ScheduleUpdateActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.schedule_input);
+        setContentView(R.layout.schedule_update);
 
         setTitle("일정 추가");
 
@@ -55,17 +55,16 @@ public class ScheduleUpdateActivity extends Activity {
         curMonth = it.getExtras().getInt("month")+1;
         curDay = it.getExtras().getInt("day");
 
+        messageInput = (EditText) findViewById(R.id.u_messageInput);
 
-        messageInput = (EditText) findViewById(R.id.messageInput);
-
-        timeButton = (Button) findViewById(R.id.timeButton);
+        timeButton = (Button) findViewById(R.id.u_timeButton);
         timeButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 showDialog(DIALOG_TIME);
             }
         });
 
-        Button saveButton = (Button) findViewById(R.id.saveButton);
+        Button saveButton = (Button) findViewById(R.id.u_saveButton);
         saveButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 String messageStr = messageInput.getText().toString();
@@ -97,7 +96,7 @@ public class ScheduleUpdateActivity extends Activity {
             }
         });
 
-        Button closeButton = (Button) findViewById(R.id.closeButton);
+        Button closeButton = (Button) findViewById(R.id.u_closeButton);
         closeButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 finish();
