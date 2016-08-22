@@ -1,7 +1,21 @@
 package com.example.younghyeon.mycalendar3;
 
+import java.text.SimpleDateFormat;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.StringTokenizer;
+
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.text.format.Time;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -11,11 +25,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class CalendarMonthAdapter extends BaseAdapter {
 
@@ -55,6 +67,23 @@ public class CalendarMonthAdapter extends BaseAdapter {
 	public int todayMonth;
 	public int todayDay;
 
+	//Json 파싱
+	String myJSON;
+
+	private static final String TAG_RESULTS="result";
+	private static final String TAG_ID = "id";
+	private static final String TAG_DATE = "date";
+	private static final String TAG_MEMO = "memo";
+
+	JSONArray peoples = null;
+
+	ArrayList<HashMap<String, String>> personList;
+	ArrayList<String> memoList;
+	ArrayList<String> dateList;
+	int checkGetData = 0;
+
+	ArrayList outScheduleList;
+
 	public CalendarMonthAdapter(Context context) {
 		super();
 
@@ -83,6 +112,16 @@ public class CalendarMonthAdapter extends BaseAdapter {
 
 		// calculate today
 		calculateToday();
+
+		if (checkGetData == 0){
+			personList = new ArrayList<HashMap<String,String>>();
+			memoList = new ArrayList<String>();
+			dateList = new ArrayList<String>();
+
+			// 그리고 한번 클릭하기 전에 먼저 세팅을 하고 싶은데
+			//getDataFromPHP("http://52.78.88.182/getdata.php?date=2016-08-03");
+			getDataFromPHP("http://52.78.88.182/getdata.php");
+		}
 	}
 
 	private void calculateToday() {
@@ -93,7 +132,21 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		todayYear = calendar.get(Calendar.YEAR);
 		todayMonth = calendar.get(Calendar.MONTH);
 		todayDay = calendar.get(Calendar.DAY_OF_MONTH);
+	}
 
+	public int calculatePosition(int year, int month, int day) {
+		int position = 0;
+		int tempFirstDay = 0;
+
+		Calendar tempCalendar = Calendar.getInstance();
+		tempCalendar.set(year, month, 1);
+
+		int dayOfWeek = tempCalendar.get(Calendar.DAY_OF_WEEK);
+		tempFirstDay = getFirstDay(dayOfWeek);
+
+		position = day + tempFirstDay - 1;
+
+		return position;
 	}
 
 	public void recalculate() {
@@ -199,7 +252,6 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		return curMonth;
 	}
 
-
 	public int getNumColumns() {
 		return 7;
 	}
@@ -266,7 +318,6 @@ public class CalendarMonthAdapter extends BaseAdapter {
 			// 일정 추가 했으면 트루
 		}
 
-
 		if (position == getSelectedPosition()) {
 			// 누른 곳은 노랗게 칠하고
         	itemView.setBackgroundColor(Color.YELLOW);
@@ -296,6 +347,7 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		}
 
 		// set weather
+		/*
 		WeatherCurrentCondition outWeather = getWeather(position);
 		if (outWeather != null) {
 			String weatherIconUrl = outWeather.getIconURL();
@@ -323,7 +375,7 @@ public class CalendarMonthAdapter extends BaseAdapter {
 			itemView.setWeatherImage(0);
 		}
 
-
+*/
 		return itemView;
 	}
 
@@ -430,6 +482,11 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		scheduleHash.put(keyStr, aList);
 	}
 
+	public void putScheduleFromParameter (int year, int month, int position, ArrayList<ScheduleListItem> aList) {
+		String keyStr = year + "-" + month + "-" + position;
+		scheduleHash.put(keyStr, aList);
+	}
+
 	public WeatherCurrentCondition getWeather(int position) {
 		String keyStr = curYear + "-" + curMonth + "-" + position;
 		WeatherCurrentCondition outWeather = weatherHash.get(keyStr);
@@ -454,4 +511,126 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		weatherHash.put(keyStr, aWeather);
 	}
 
+
+	protected void showDataFromPHP() {
+		try {
+			JSONObject jsonObj = new JSONObject(myJSON);
+			peoples = jsonObj.getJSONArray(TAG_RESULTS);
+			for(int i=0;i<peoples.length();i++){
+				JSONObject c = peoples.getJSONObject(i);
+				String id = c.getString(TAG_ID);
+				String date = c.getString(TAG_DATE);
+				String memo = c.getString(TAG_MEMO);
+
+				HashMap<String,String> persons = new HashMap<String,String>();
+
+				persons.put(TAG_ID,id);
+				persons.put(TAG_DATE,date);
+				persons.put(TAG_MEMO, memo);
+
+				dateList.add(date);
+				memoList.add(memo);
+			//	personList.add(persons);
+			}
+			// 데이터 읽어와서 초기화 작업을 진행하는 곳
+
+		//	java.util.Date date = new java.util.Date();
+			Calendar c = Calendar.getInstance();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
+			if (outScheduleList == null) {
+				outScheduleList = new ArrayList();
+			}
+			String tempDateString = "";
+			String tempMemoString = "";
+			int tempYear = 0;
+			int tempMonth = 0;
+			int tempDay = 0;
+			int prevDay = 0;
+			for (int i = 0; i < memoList.size(); i++){
+				tempDateString = dateList.get(i);
+				tempMemoString = memoList.get(i);
+				Log.e("test", "tempDateString : "+tempDateString);
+				Log.e("test", "tempMemoString : "+tempMemoString);
+				try {
+					c.setTime(sdf.parse(tempDateString));
+					tempYear = c.get(Calendar.YEAR);
+					tempMonth = c.get(Calendar.MONTH);
+					tempDay = c.get(Calendar.DAY_OF_MONTH);
+				//	Log.e("test", "hi : " + sdf.format(date));
+					Log.e("test", "tempYear : "+tempYear);
+					Log.e("test", "tempMonth : "+tempMonth);
+					Log.e("test", "tempDay : "+tempDay);
+				} catch (java.text.ParseException ex) {
+					ex.printStackTrace();
+				}
+				if (prevDay != tempDay){
+					outScheduleList = new ArrayList();
+				}
+
+				// 이거 시간이 고정인데 이것도 바꿔줘야 되는구만
+				String time = "12시23분";
+
+				ScheduleListItem aItem = new ScheduleListItem(time, tempMemoString);
+				//mCalendar.
+
+				int position = calculatePosition(tempYear, tempMonth, tempDay);
+
+				outScheduleList.add(aItem);
+				putScheduleFromParameter(tempYear, tempMonth, position, outScheduleList);
+				// 이렇게 하면 들어가 신기함
+				notifyDataSetChanged();
+				prevDay = tempDay;
+			}
+			checkGetData = 1;
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void getDataFromPHP (String url) {
+
+		class GetDataJSON extends AsyncTask<String, Void, String> {
+			@Override
+			protected String doInBackground(String... params) {
+
+				String uri = params[0];
+				BufferedReader bufferedReader = null;
+				try {
+					URL url = new URL(uri);
+					HttpURLConnection con = (HttpURLConnection) url.openConnection();
+					StringBuilder sb = new StringBuilder();
+
+					bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+					String json;
+					while ((json = bufferedReader.readLine()) != null) {
+						sb.append(json + "\n");
+					}
+
+					return sb.toString().trim();
+
+				} catch (Exception e) {
+					return null;
+				}
+			}
+
+			@Override
+			protected void onPostExecute(String result) {
+				myJSON = result;
+				showDataFromPHP();
+
+				MainActivity.progressDialog.dismiss();
+				//progressDialog.dismiss();
+				// 여기 위치가 맞는 듯
+			}
+		}
+
+		GetDataJSON g = new GetDataJSON();
+		g.execute(url);
+
+		checkGetData = 1;
+
+	}
 }
+

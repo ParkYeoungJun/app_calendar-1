@@ -1,12 +1,30 @@
 package com.example.younghyeon.mycalendar3;
 
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -18,7 +36,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +61,7 @@ public class MainActivity extends Activity {
     CalendarMonthAdapter monthViewAdapter;
 
     TextView monthText;
+
 
     int curYear;
     int curMonth;
@@ -65,14 +87,18 @@ public class MainActivity extends Activity {
     WeatherCurrentCondition weather = null;
 
     Handler handler = new Handler();
+    static ProgressDialog progressDialog;
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        progressDialog = ProgressDialog.show(MainActivity.this, "", "데이터를 가져오는 중입니다", true, true);
         monthView = (GridView) findViewById(R.id.monthView);
         monthViewAdapter = new CalendarMonthAdapter(this);
         monthView.setAdapter(monthViewAdapter);
+
 
         // set listener
         monthView.setOnItemClickListener(new OnItemClickListener() {
@@ -89,6 +115,7 @@ public class MainActivity extends Activity {
                     if (outScheduleList == null) {
                     outScheduleList = new ArrayList<ScheduleListItem>();
                 }
+
                 scheduleAdapter.scheduleList = outScheduleList;
 
                 scheduleAdapter.notifyDataSetChanged();
@@ -123,14 +150,14 @@ public class MainActivity extends Activity {
                 monthViewAdapter.setPreviousMonth();
                 monthViewAdapter.notifyDataSetChanged();
                 setMonthText();
-             //   Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+                //   Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
             }
 
             public void onSwipeLeft() {
                 monthViewAdapter.setNextMonth();
                 monthViewAdapter.notifyDataSetChanged();
                 setMonthText();
-             //   Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+                //   Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
             }
 
             public void onSwipeBottom() {
@@ -172,8 +199,6 @@ public class MainActivity extends Activity {
         scheduleList = (ListView)findViewById(R.id.scheduleList);
         scheduleAdapter = new ScheduleListAdapter(this);
         scheduleList.setAdapter(scheduleAdapter);
-
-
     }
 
 
@@ -212,7 +237,7 @@ public class MainActivity extends Activity {
 
                 return true;
             case Menu.FIRST+1:
-                getCurrentWeather();
+          //      getCurrentWeather();
 
                 return true;
             default:
@@ -225,6 +250,8 @@ public class MainActivity extends Activity {
     /**
      * get current weather
      */
+
+    /*
     private void getCurrentWeather() {
         weatherCanceled = false;
 
@@ -234,8 +261,8 @@ public class MainActivity extends Activity {
         thread.start();
 
     }
-
-
+*/
+/*
     class CurrentWeatherSaveThread extends Thread {
         public CurrentWeatherSaveThread() {
 
@@ -270,8 +297,8 @@ public class MainActivity extends Activity {
             }
 
         }
-    }
-
+    }*/
+/*
     private InputStream getInputStreamUsingHTTP(URL url) throws Exception {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -312,7 +339,7 @@ public class MainActivity extends Activity {
         }
     };
 
-
+*/
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case WEATHER_PROGRESS_DIALOG:
@@ -338,7 +365,6 @@ public class MainActivity extends Activity {
                 AlertDialog alertDialog = alertBuilder.create();
                 return alertDialog;
         }
-
         return null;
     }
 
@@ -383,7 +409,6 @@ public class MainActivity extends Activity {
 
                 ScheduleListItem aItem = new ScheduleListItem(time, message);
 
-
                 if (outScheduleList == null) {
                     outScheduleList = new ArrayList();
                 }
@@ -395,6 +420,7 @@ public class MainActivity extends Activity {
                 scheduleAdapter.notifyDataSetChanged();
 
                 // put weather
+                /*
                 WeatherCurrentCondition aWeather = new WeatherCurrentCondition();
                 if (selectedWeather == 0) {
                     aWeather.setCondition("Sunny");
@@ -412,7 +438,7 @@ public class MainActivity extends Activity {
 
                 monthViewAdapter.putWeather(curPosition, aWeather);
                 monthViewAdapter.notifyDataSetChanged();
-
+*/
             }
         }
 
