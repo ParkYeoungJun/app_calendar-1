@@ -159,10 +159,17 @@ public class ScheduleShowActivity  extends Activity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                     Toast.makeText(getApplicationContext(), "hi"+id, Toast.LENGTH_LONG).show();
 //                    Toast.makeText(getApplicationContext(), "hi"+scheduleList.get(position).get("date"), Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getApplicationContext(), ScheduleInputActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), ScheduleUpdateActivity.class);
                     intent.putExtra("year", curYear);
                     intent.putExtra("month", curMonth);
-                    intent.putExtra("position", position);
+                    intent.putExtra("id", scheduleList.get(position).get("id"));
+                    intent.putExtra("date", scheduleList.get(position).get("date"));
+                    intent.putExtra("memo", scheduleList.get(position).get("memo"));
+
+//                    Log.e("jsonerr", "id : "+ scheduleList.get(position).get("id"));
+//                    Log.e("jsonerr", "date : " + scheduleList.get(position).get("date"));
+//                    Log.e("jsonerr", "memo"+ scheduleList.get(position).get("memo"));
+
                     startActivity(intent);
                 }
             });

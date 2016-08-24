@@ -19,6 +19,7 @@
         </activity>
         <activity android:name=".ScheduleShowActivity"/>
         <activity android:name="ScheduleInputActivity" android:theme="@android:style/Theme.Dialog"> </activity>
+        <activity android:name="ScheduleUpdateActivity" android:theme="@android:style/Theme.Dialog"> </activity>
     </application>
 
 </manifest>

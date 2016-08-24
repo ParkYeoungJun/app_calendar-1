@@ -48,12 +48,13 @@ public class ScheduleUpdateActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule_update);
 
-        setTitle("일정 추가");
+        setTitle("일정 수정");
 
         Intent it = getIntent();
         curYear = it.getExtras().getInt("year");
         curMonth = it.getExtras().getInt("month")+1;
-        curDay = it.getExtras().getInt("day");
+
+//        curDay = it.getExtras().getInt("day");
 
         messageInput = (EditText) findViewById(R.id.u_messageInput);
 
@@ -191,7 +192,7 @@ public class ScheduleUpdateActivity extends Activity {
                     //OutputStream os = con.getOutputStream();
                     Log.e("jsonerr", "write_json6 : " + jsonObj.toString());
                     //BufferedWriter writer = new BufferedWriter(
-                      //      new OutputStreamWriter(os, "UTF-8"));
+                    //      new OutputStreamWriter(os, "UTF-8"));
                     Log.e("jsonerr", "write_json2 : " + jsonObj.toString());
                     //os.write(jsonObj.toString().getBytes());
 
@@ -222,9 +223,6 @@ public class ScheduleUpdateActivity extends Activity {
                 }catch(Exception e){
                     return null;
                 }
-
-
-
             }
 
 
