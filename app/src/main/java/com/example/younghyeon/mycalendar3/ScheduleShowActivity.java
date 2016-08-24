@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -49,6 +51,17 @@ public class ScheduleShowActivity  extends Activity {
     int curYear;
     int curMonth;
     int curDay;
+
+    int position;
+    int year;
+    int month;
+
+    ImageView imageViewList;
+    ImageView imageViewPlus;
+    //HashMap<String,ArrayList<ScheduleListItem>> scheduleHash;
+    ArrayList outScheduleList;
+    ScheduleListAdapter scheduleAdapter;
+    ArrayList<ScheduleListItem> scheduleList2;
 //    ListAdapter adapter;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +70,35 @@ public class ScheduleShowActivity  extends Activity {
 
         monthText = (TextView) findViewById(R.id.monthText);
         setMonthText();
+
+        imageViewList = (ImageView) findViewById(R.id.backButton);
+
+        imageViewList.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent();
+
+                setResult(RESULT_OK, intent);
+
+                finish();
+            }
+        });
+
+        imageViewPlus = (ImageView) findViewById(R.id.plusButton);
+
+        imageViewPlus.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent();
+
+                setResult(RESULT_OK, intent);
+
+                finish();
+            }
+        });
+
+        Intent intent = getIntent();
+        position = intent.getExtras().getInt("position");
+        month = intent.getExtras().getInt("month");
+        year = intent.getExtras().getInt("year");
 
         String str_curMonth = String.format("%02d", curMonth);
         String str_curDay = String.format("%02d", curDay);
@@ -127,8 +169,10 @@ public class ScheduleShowActivity  extends Activity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     String str_id = scheduleList.get(fin_i).get("id");
-                                    deleteData("http://52.78.88.182/deletedata.php?id="+str_id);
+                                    deleteData("http://52.78.88.182/deletedata.php?id=" + str_id);
                                     Log.e("jsonerr", "fin_i " + scheduleList.get(fin_i));
+
+                                    CalendarMonthAdapter.removeSchedule(year, month, position, fin_i);
 
                                     scheduleList.remove(fin_i);
                                     if (adapter instanceof BaseAdapter) {
@@ -137,6 +181,7 @@ public class ScheduleShowActivity  extends Activity {
                                         throw new RuntimeException("Unexpected adapter");
                                     }
                                     Log.e("jsonerr", "Yes");
+
                                 }
                             }).setNegativeButton("취소",
                             new DialogInterface.OnClickListener() {
@@ -173,6 +218,17 @@ public class ScheduleShowActivity  extends Activity {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public boolean onKeyDown (int keyCode, KeyEvent event){
+        // 뒤로가기 버튼 이벤트 처리
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+        return false;
     }
 
     public void deleteData(String url){

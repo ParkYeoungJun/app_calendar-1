@@ -85,7 +85,10 @@ public class MonthItemView extends RelativeLayout {
 		// 이건 없어도 될거같은데
 		// 여기서 일정추가한거 받아와야 되겠는데
 
-		if(size >= 1) {
+		tempStr = "";
+		resultStr = "1234..";
+
+		if(size == 1) {
 			tempStr = aList.get(0).getMessage();
 			if ( tempStr.length() > 4){
 				resultStr = tempStr.substring(0,4);
@@ -95,11 +98,21 @@ public class MonthItemView extends RelativeLayout {
 			else {
 				dayMsg1.setText(tempStr);
 			}
+			dayMsg2.setText("");
+			dayMsg3.setText("");
+			dayMsg4.setText("");
 		}
-		tempStr = "";
-		resultStr = "1234..";
+		else if(size == 2) {
+			tempStr = aList.get(0).getMessage();
+			if ( tempStr.length() > 4){
+				resultStr = tempStr.substring(0,4);
+				dayMsg1.setText(resultStr + "..");
 
-		if(size >= 2) {
+			}
+			else {
+				dayMsg1.setText(tempStr);
+			}
+
 			tempStr = aList.get(1).getMessage();
 			if ( tempStr.length() > 4){
 				resultStr = tempStr.substring(0,4);
@@ -109,11 +122,30 @@ public class MonthItemView extends RelativeLayout {
 			else {
 				dayMsg2.setText(tempStr);
 			}
+			dayMsg3.setText("");
+			dayMsg4.setText("");
 		}
-		tempStr = "";
-		resultStr = "1234..";
+		else if(size == 3) {
+			tempStr = aList.get(0).getMessage();
+			if ( tempStr.length() > 4){
+				resultStr = tempStr.substring(0,4);
+				dayMsg1.setText(resultStr + "..");
 
-		if(size >= 3) {
+			}
+			else {
+				dayMsg1.setText(tempStr);
+			}
+
+			tempStr = aList.get(1).getMessage();
+			if ( tempStr.length() > 4){
+				resultStr = tempStr.substring(0,4);
+				dayMsg2.setText(resultStr + "..");
+
+			}
+			else {
+				dayMsg2.setText(tempStr);
+			}
+
 			tempStr = aList.get(2).getMessage();
 			if ( tempStr.length() > 4){
 				resultStr = tempStr.substring(0,4);
@@ -122,11 +154,37 @@ public class MonthItemView extends RelativeLayout {
 			else {
 				dayMsg3.setText(tempStr);
 			}
+			dayMsg4.setText("");
 		}
-		tempStr = "";
-		resultStr = "1234..";
+		else if(size >= 4) {
+			tempStr = aList.get(0).getMessage();
+			if ( tempStr.length() > 4){
+				resultStr = tempStr.substring(0,4);
+				dayMsg1.setText(resultStr + "..");
 
-		if(size >= 4) {
+			}
+			else {
+				dayMsg1.setText(tempStr);
+			}
+
+			tempStr = aList.get(1).getMessage();
+			if ( tempStr.length() > 4){
+				resultStr = tempStr.substring(0,4);
+				dayMsg2.setText(resultStr + "..");
+
+			}
+			else {
+				dayMsg2.setText(tempStr);
+			}
+
+			tempStr = aList.get(2).getMessage();
+			if ( tempStr.length() > 4){
+				resultStr = tempStr.substring(0,4);
+				dayMsg3.setText(resultStr + "..");
+			}
+			else {
+				dayMsg3.setText(tempStr);
+			}
 			tempStr = aList.get(3).getMessage();
 			dayMsg4.setText("..");
 		}

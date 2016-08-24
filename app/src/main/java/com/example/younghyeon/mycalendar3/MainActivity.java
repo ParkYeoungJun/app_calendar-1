@@ -78,6 +78,7 @@ public class MainActivity extends Activity {
     public static final int REQUEST_CODE_SCHEDULE_INPUT = 1001;
     public static final int WEATHER_PROGRESS_DIALOG = 1002;
     public static final int WEATHER_SAVED_DIALOG = 1003;
+    public static final int REQUEST_CODE_SCHEDULE_REMOVE = 1004;
 
     private static final String BASE_URL = "http://www.google.com";
     private static String WEATHER_URL = "http://www.google.com/ig/api?weather=";
@@ -126,13 +127,15 @@ public class MainActivity extends Activity {
                         showScheduleInput();
                         // 일정이 없을시에는 일정 추가
                     } else {
-                        //     showScheduleInput();
+                       // showScheduleInput();
+
                         Intent intent = new Intent(getApplicationContext(), ScheduleShowActivity.class);
 //                        intent.putExtra("_outScheduleList", monthViewAdapter.getSchedule(position));
                         intent.putExtra("year", curYear);
                         intent.putExtra("month", curMonth);
+                        intent.putExtra("position", position);
                         intent.putExtra("day", day);
-                        startActivity(intent);
+                        startActivityForResult(intent, REQUEST_CODE_SCHEDULE_REMOVE);
                         // 일정이 있을시에는 일정 보여주는 리스트 액티비티 띄워야 될 듯
                     }
                 }
@@ -418,28 +421,16 @@ public class MainActivity extends Activity {
 
                 scheduleAdapter.scheduleList = outScheduleList;
                 scheduleAdapter.notifyDataSetChanged();
-
-                // put weather
-                /*
-                WeatherCurrentCondition aWeather = new WeatherCurrentCondition();
-                if (selectedWeather == 0) {
-                    aWeather.setCondition("Sunny");
-                    aWeather.setIconURL("/ig/images/weather/sunny.gif");
-                } else if (selectedWeather == 1) {
-                    aWeather.setCondition("Cloudy");
-                    aWeather.setIconURL("/ig/images/weather/cloudy.gif");
-                } else if (selectedWeather == 2) {
-                    aWeather.setCondition("Rain");
-                    aWeather.setIconURL("/ig/images/weather/rain.gif");
-                } else if (selectedWeather == 3) {
-                    aWeather.setCondition("Snow");
-                    aWeather.setIconURL("/ig/images/weather/snow.gif");
-                }
-
-                monthViewAdapter.putWeather(curPosition, aWeather);
-                monthViewAdapter.notifyDataSetChanged();
-*/
             }
+        }
+        else if (requestCode == REQUEST_CODE_SCHEDULE_REMOVE){
+            if (intent == null) {
+                return;
+            }
+
+            // 이걸 하면 Calendar getView가 콜이 되는건가 암튼 화면 업데이트 할 수 있다.
+            monthViewAdapter.notifyDataSetChanged();
+            scheduleAdapter.notifyDataSetChanged();
         }
 
     }

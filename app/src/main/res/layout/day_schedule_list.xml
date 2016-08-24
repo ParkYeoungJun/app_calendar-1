@@ -7,6 +7,20 @@
         android:layout_height="61dp"
         android:background="@android:color/holo_purple"
         >
+        <ImageButton
+            android:id="@+id/plusButton"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/plus2"
+            android:layout_alignParentRight="true"
+            />
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/list"
+            android:layout_alignParentLeft="true"
+            />
         <TextView
             android:id="@+id/monthText"
             android:layout_width="160dp"
