@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.xml.parsers.SAXParser;
@@ -36,6 +38,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -70,6 +73,7 @@ public class MainActivity extends Activity {
     int curPosition;
     EditText scheduleInput;
     Button saveButton;
+    ImageButton plusbutton;
 
     ListView scheduleList;
     ScheduleListAdapter scheduleAdapter;
@@ -99,7 +103,6 @@ public class MainActivity extends Activity {
         monthView = (GridView) findViewById(R.id.monthView);
         monthViewAdapter = new CalendarMonthAdapter(this);
         monthView.setAdapter(monthViewAdapter);
-
 
         // set listener
         monthView.setOnItemClickListener(new OnItemClickListener() {
@@ -136,11 +139,26 @@ public class MainActivity extends Activity {
                         intent.putExtra("position", position);
                         intent.putExtra("day", day);
                         startActivityForResult(intent, REQUEST_CODE_SCHEDULE_REMOVE);
-                        // 일정이 있을시에는 일정 보여주는 리스트 액티비티 띄워야 될 듯
+                        // 일정이 있을시에는 일정 보여주는 리스트 액티비티 띄워야 될 듯Z
                     }
                 }
                 // set schedule to the TextView
                 curPosition = position;
+            }
+        });
+
+        plusbutton = (ImageButton) findViewById(R.id.plusButton);
+        plusbutton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (selectedDay == 0){
+                    Toast.makeText(MainActivity.this, "please select day", Toast.LENGTH_SHORT).show();
+                    /*
+                    int position = monthViewAdapter.getTodayPosition();
+                    MonthItem curItem = (MonthItem) monthViewAdapter.getItem(position);
+                    int day = curItem.getDay();
+                    selectedDay = curItem.getDay();*/
+                }
+                else showScheduleInput();
             }
         });
 

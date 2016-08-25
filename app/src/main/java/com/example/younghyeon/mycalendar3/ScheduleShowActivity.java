@@ -172,6 +172,7 @@ public class ScheduleShowActivity  extends Activity {
                                     deleteData("http://52.78.88.182/deletedata.php?id=" + str_id);
                                     Log.e("jsonerr", "fin_i " + scheduleList.get(fin_i));
 
+                                    // 메인달력 표시에도 삭제
                                     CalendarMonthAdapter.removeSchedule(year, month, position, fin_i);
 
                                     scheduleList.remove(fin_i);

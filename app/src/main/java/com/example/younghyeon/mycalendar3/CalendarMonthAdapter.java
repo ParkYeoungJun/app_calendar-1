@@ -335,7 +335,7 @@ public class CalendarMonthAdapter extends BaseAdapter {
         	}
         }
 
-		// 일정 보여주는 거
+		// 메인달력에 일정 보여주는 코드
 		if (scheduleExist == false){
 			itemView.setMsg(outList);
 		}
@@ -453,11 +453,10 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		String str = outList.get(index).getMessage();
 		outList.remove(index);
 
-		Log.e("hi", "pos1 " + outList.size());
-		Log.e("hi", "pos2 " + index);
-		Log.e("hi", "pos3 " + str);
-		// outList.get(index).getMessage();
-
+		Log.e("CalendarMonthAdapter", "oustList.size " + outList.size());
+		Log.e("CalendarMonthAdapter", "index " + index);
+		Log.e("CalendarMonthAdapter", "str " + str);
+		// 이거 다 지우고 다시 넣는 방법밖에 없는 걸까요
 		scheduleHash.remove(keyStr);
 		scheduleHash.put(keyStr, outList);
 	}
@@ -561,17 +560,16 @@ public class CalendarMonthAdapter extends BaseAdapter {
 			for (int i = 0; i < memoList.size(); i++){
 				tempDateString = dateList.get(i);
 				tempMemoString = memoList.get(i);
-				Log.e("test", "tempDateString : "+tempDateString);
-				Log.e("test", "tempMemoString : "+tempMemoString);
+				Log.e("CalendarMonthAdapter", "tempDateString : "+tempDateString);
+				Log.e("CalendarMonthAdapter", "tempMemoString : "+tempMemoString);
 				try {
 					c.setTime(sdf.parse(tempDateString));
 					tempYear = c.get(Calendar.YEAR);
 					tempMonth = c.get(Calendar.MONTH);
 					tempDay = c.get(Calendar.DAY_OF_MONTH);
-				//	Log.e("test", "hi : " + sdf.format(date));
-					Log.e("test", "tempYear : "+tempYear);
-					Log.e("test", "tempMonth : "+tempMonth);
-					Log.e("test", "tempDay : "+tempDay);
+					Log.e("CalendarMonthAdapter", "tempYear : "+tempYear);
+					Log.e("CalendarMonthAdapter", "tempMonth : "+tempMonth);
+					Log.e("CalendarMonthAdapter", "tempDay : "+tempDay);
 				} catch (java.text.ParseException ex) {
 					ex.printStackTrace();
 				}
@@ -637,7 +635,6 @@ public class CalendarMonthAdapter extends BaseAdapter {
 				showDataFromPHP();
 
 				MainActivity.progressDialog.dismiss();
-				//progressDialog.dismiss();
 				// 여기 위치가 맞는 듯
 			}
 		}
