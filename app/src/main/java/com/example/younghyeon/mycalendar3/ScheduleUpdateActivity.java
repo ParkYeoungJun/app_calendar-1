@@ -35,8 +35,11 @@ public class ScheduleUpdateActivity extends Activity {
 
     int curYear, curMonth, curDay;
     int selectedHour, selectedMin;
+    int cur_id;
+    String pos;
     String sqlTimeStr = "";
     String memo = "";
+    Calendar calen;
 
     public static final int DIALOG_TIME = 1101;
 
@@ -51,12 +54,33 @@ public class ScheduleUpdateActivity extends Activity {
         setTitle("일정 수정");
 
         Intent it = getIntent();
-        curYear = it.getExtras().getInt("year");
-        curMonth = it.getExtras().getInt("month")+1;
+        cur_id = Integer.parseInt(it.getExtras().getString("id"));
+        sqlTimeStr = it.getExtras().getString("date");
+        memo = it.getExtras().getString("memo");
+        pos = it.getExtras().getString("pos");
 
-//        curDay = it.getExtras().getInt("day");
+
+        calen = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
+        try
+        {
+            calen.setTime(sdf.parse(sqlTimeStr));
+            Log.e("jsonerr", "id : "+ cur_id);
+            Log.e("jsonerr", "pos_str : "+ pos);
+            Log.e("jsonerr", "selectedTime : "+ calen.get(Calendar.HOUR));
+            Log.e("jsonerr", "selectedTime : "+ calen.get(Calendar.MINUTE));
+            curYear = calen.get(Calendar.YEAR);
+            curMonth = calen.get(Calendar.MONTH)+1;
+            curDay = calen.get(Calendar.DAY_OF_MONTH);
+
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
 
         messageInput = (EditText) findViewById(R.id.u_messageInput);
+        messageInput.setText(memo);
+        messageInput.setSelection(messageInput.length());
 
         timeButton = (Button) findViewById(R.id.u_timeButton);
         timeButton.setOnClickListener(new OnClickListener() {
@@ -88,10 +112,12 @@ public class ScheduleUpdateActivity extends Activity {
 
 
                 Intent intent = new Intent();
-                intent.putExtra("time", timeStr);
-                intent.putExtra("message", messageStr);
+                intent.putExtra("date", sqlTimeStr);
+                intent.putExtra("memo", memo);
+                intent.putExtra("pos", pos);
 
                 setResult(RESULT_OK, intent);
+//
 
                 finish();
             }
@@ -106,7 +132,7 @@ public class ScheduleUpdateActivity extends Activity {
 
 
         // set selected date using current date
-        Date curDate = new Date();
+        Date curDate = calen.getTime();
         setSelectedDate(curDate);
 
         // process the passed intent
@@ -128,6 +154,7 @@ public class ScheduleUpdateActivity extends Activity {
 
                 calendar.setTime(curDate);
 
+
                 int curHour = calendar.get(Calendar.HOUR_OF_DAY);
                 int curMinute = calendar.get(Calendar.MINUTE);
 
@@ -143,6 +170,7 @@ public class ScheduleUpdateActivity extends Activity {
     private TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             Calendar selectedCalendar = Calendar.getInstance();
+//            Log.e("jsonerr", "timeSetListener : " + );
             selectedCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             selectedCalendar.set(Calendar.MINUTE, minute);
 
@@ -155,6 +183,7 @@ public class ScheduleUpdateActivity extends Activity {
         selectedDate = curDate;
         selectedHour = selectedDate.getHours();
         selectedMin = selectedDate.getMinutes();
+
         String selectedTimeStr = timeFormat.format(curDate);
         timeButton.setText(selectedTimeStr);
     }
@@ -167,6 +196,7 @@ public class ScheduleUpdateActivity extends Activity {
                 try {
                     String uri = params[0];
                     JSONObject jsonObj = new JSONObject();
+                    jsonObj.put("id", cur_id);
                     jsonObj.put("date", sqlTimeStr);
                     jsonObj.put("memo", memo);
 
@@ -213,11 +243,6 @@ public class ScheduleUpdateActivity extends Activity {
                         //서버응답값을 String 형태로 추가함
                         Log.e("jsonerr", "Read : " + line+"\n");
                     }
-
-
-
-
-
                     return sb.toString().trim();
 
                 }catch(Exception e){

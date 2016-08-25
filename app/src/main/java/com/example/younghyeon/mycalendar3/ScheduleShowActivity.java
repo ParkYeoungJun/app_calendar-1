@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -27,7 +26,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by YOUNGHYEON on 2016-08-16.
@@ -62,7 +64,10 @@ public class ScheduleShowActivity  extends Activity {
     ArrayList outScheduleList;
     ScheduleListAdapter scheduleAdapter;
     ArrayList<ScheduleListItem> scheduleList2;
-//    ListAdapter adapter;
+
+    ListAdapter adapter;
+
+    public static final int REQUEST_CODE_SCHEDULE_UPDATE = 1020;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,7 +152,7 @@ public class ScheduleShowActivity  extends Activity {
             }
             Log.e("jsonerr", "4");
 //            adapter = new SimpleAdapter(
-            final ListAdapter adapter = new SimpleAdapter(
+            adapter = new SimpleAdapter(
                     ScheduleShowActivity.this, scheduleList, R.layout.list_item,
                     new String[]{TAG_ID,TAG_DATE,TAG_MEMO},
                     new int[]{R.id.id, R.id.name, R.id.address}
@@ -160,7 +165,7 @@ public class ScheduleShowActivity  extends Activity {
                 public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Log.e("jsonerr", "long : " + i + ", " + l);
                     final int fin_i = i;
-                    final Adapter adapter = adapterView.getAdapter();
+//                    final Adapter adapter = adapterView.getAdapter();
 
 //                    Toast.makeText(getApplicationContext(), "long"+, Toast.LENGTH_LONG).show();
                     AlertDialog.Builder alert_confirm = new AlertDialog.Builder(ScheduleShowActivity.this);
@@ -206,17 +211,22 @@ public class ScheduleShowActivity  extends Activity {
 //                     Toast.makeText(getApplicationContext(), "hi"+id, Toast.LENGTH_LONG).show();
 //                    Toast.makeText(getApplicationContext(), "hi"+scheduleList.get(position).get("date"), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), ScheduleUpdateActivity.class);
-                    intent.putExtra("year", curYear);
-                    intent.putExtra("month", curMonth);
                     intent.putExtra("id", scheduleList.get(position).get("id"));
                     intent.putExtra("date", scheduleList.get(position).get("date"));
                     intent.putExtra("memo", scheduleList.get(position).get("memo"));
+                    intent.putExtra("pos", ""+position);
 
-//                    Log.e("jsonerr", "id : "+ scheduleList.get(position).get("id"));
-//                    Log.e("jsonerr", "date : " + scheduleList.get(position).get("date"));
-//                    Log.e("jsonerr", "memo"+ scheduleList.get(position).get("memo"));
+                    Log.e("jsonerr", "id : "+ scheduleList.get(position).get("id"));
+                    Log.e("jsonerr", "date : " + scheduleList.get(position).get("date"));
+                    Log.e("jsonerr", "memo"+ scheduleList.get(position).get("memo"));
 
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE_SCHEDULE_UPDATE);
+
+                    if (adapter instanceof BaseAdapter) {
+                        ((BaseAdapter)adapter).notifyDataSetChanged();
+                    } else {
+                        throw new RuntimeException("Unexpected adapter");
+                    }
                 }
             });
 
@@ -334,4 +344,46 @@ public class ScheduleShowActivity  extends Activity {
 //
 //        return outList;
 //    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == REQUEST_CODE_SCHEDULE_UPDATE) {
+            if (intent == null) {
+                return;
+            }
+            int pos = Integer.parseInt(intent.getStringExtra("pos"));
+            String date = intent.getStringExtra("date");
+            String memo = intent.getStringExtra("memo");
+
+            Log.e("jsonerr", "pos : "+ pos);
+
+//            scheduleList.set(pos, )
+            HashMap<String,String> h_schedules = new HashMap<String,String>();
+            Log.e("jsonerr", "asdfsdf");
+            h_schedules.put(TAG_ID, scheduleList.get(pos).get("id"));
+            h_schedules.put(TAG_DATE,date);
+            h_schedules.put(TAG_MEMO,memo);
+
+            scheduleList.set(pos, h_schedules);
+            Log.e("jsonerr", "size : "+ h_schedules.toString());
+
+            Comparator<Map<String, String>> mapComparator = new Comparator<Map<String, String>>() {
+                public int compare(Map<String, String> m1, Map<String, String> m2) {
+                    return m1.get("date").compareTo(m2.get("date"));
+                }
+            };
+
+            Collections.sort(scheduleList, mapComparator);
+
+            if (adapter instanceof BaseAdapter) {
+                ((BaseAdapter)adapter).notifyDataSetChanged();
+            } else {
+                throw new RuntimeException("Unexpected adapter");
+            }
+
+            //여기다가 추가시키면 됩니다.
+
+        }
+    }
 }
