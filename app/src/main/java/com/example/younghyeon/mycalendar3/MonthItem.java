@@ -8,7 +8,7 @@ public class MonthItem {
 
 	}
 
-	
+
 	public MonthItem(int day) {
 		dayValue = day;
 	}
