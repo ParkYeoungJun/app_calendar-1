@@ -57,7 +57,7 @@ public class CalendarMonthAdapter extends BaseAdapter {
 	ArrayList scheduleMsg;
 
 	// schedule Hash
-	HashMap<String,ArrayList<ScheduleListItem>> scheduleHash;
+	static HashMap<String,ArrayList<ScheduleListItem>> scheduleHash;
 
 	// weather Hash
 	HashMap<String,WeatherCurrentCondition> weatherHash;
@@ -118,8 +118,6 @@ public class CalendarMonthAdapter extends BaseAdapter {
 			memoList = new ArrayList<String>();
 			dateList = new ArrayList<String>();
 
-			// 그리고 한번 클릭하기 전에 먼저 세팅을 하고 싶은데
-			//getDataFromPHP("http://52.78.88.182/getdata.php?date=2016-08-03");
 			getDataFromPHP("http://52.78.88.182/getdata.php");
 		}
 	}
@@ -312,6 +310,7 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		boolean scheduleExist = false;
 		if (outList != null) {
 			outListSize = outList.size();
+			Log.e("hi", "outListSize " + outListSize);
 		}
 		if (outList != null && outList.size() > 0) {
 			scheduleExist = true;
@@ -336,14 +335,13 @@ public class CalendarMonthAdapter extends BaseAdapter {
         	}
         }
 
-		// 일정 보여주는 거
-		if (outList != null) {
-			itemView.setMsg(items[position], outList, outListSize);
-			// 일정이 있으면 사이즈 넘겨서
+		// 메인달력에 일정 보여주는 코드
+		if (scheduleExist == false){
+			itemView.setMsg(outList);
 		}
 		else {
-			itemView.setMsg(outList);
-			// 일정 없으면 textview 없음
+			itemView.setMsg(items[position], outList, outListSize);
+			// 일정이 있으면 사이즈 넘겨서
 		}
 
 		// set weather
@@ -449,6 +447,19 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		return selectedPosition;
 	}
 
+	public static void removeSchedule(int year, int month, int position, int index) {
+		String keyStr = year + "-" + month + "-" + position;
+		ArrayList<ScheduleListItem> outList = scheduleHash.get(keyStr);
+		String str = outList.get(index).getMessage();
+		outList.remove(index);
+
+		Log.e("CalendarMonthAdapter", "oustList.size " + outList.size());
+		Log.e("CalendarMonthAdapter", "index " + index);
+		Log.e("CalendarMonthAdapter", "str " + str);
+		// 이거 다 지우고 다시 넣는 방법밖에 없는 걸까요
+		scheduleHash.remove(keyStr);
+		scheduleHash.put(keyStr, outList);
+	}
 
 	/**
 	 * get schedule
@@ -549,17 +560,16 @@ public class CalendarMonthAdapter extends BaseAdapter {
 			for (int i = 0; i < memoList.size(); i++){
 				tempDateString = dateList.get(i);
 				tempMemoString = memoList.get(i);
-				Log.e("test", "tempDateString : "+tempDateString);
-				Log.e("test", "tempMemoString : "+tempMemoString);
+				Log.e("CalendarMonthAdapter", "tempDateString : "+tempDateString);
+				Log.e("CalendarMonthAdapter", "tempMemoString : "+tempMemoString);
 				try {
 					c.setTime(sdf.parse(tempDateString));
 					tempYear = c.get(Calendar.YEAR);
 					tempMonth = c.get(Calendar.MONTH);
 					tempDay = c.get(Calendar.DAY_OF_MONTH);
-				//	Log.e("test", "hi : " + sdf.format(date));
-					Log.e("test", "tempYear : "+tempYear);
-					Log.e("test", "tempMonth : "+tempMonth);
-					Log.e("test", "tempDay : "+tempDay);
+					Log.e("CalendarMonthAdapter", "tempYear : "+tempYear);
+					Log.e("CalendarMonthAdapter", "tempMonth : "+tempMonth);
+					Log.e("CalendarMonthAdapter", "tempDay : "+tempDay);
 				} catch (java.text.ParseException ex) {
 					ex.printStackTrace();
 				}
@@ -574,11 +584,15 @@ public class CalendarMonthAdapter extends BaseAdapter {
 				//mCalendar.
 
 				int position = calculatePosition(tempYear, tempMonth, tempDay);
+				// 가장 처음에 데이터 아무것도 없을때 데이터 파싱해서 읽어와서 자리에 넣기 위해서는
+				// pos를 모르기 때문에 구해야 함 day를 이용해서
+
 
 				outScheduleList.add(aItem);
 				putScheduleFromParameter(tempYear, tempMonth, position, outScheduleList);
 				// 이렇게 하면 들어가 신기함
 				notifyDataSetChanged();
+
 				prevDay = tempDay;
 			}
 			checkGetData = 1;
@@ -621,7 +635,6 @@ public class CalendarMonthAdapter extends BaseAdapter {
 				showDataFromPHP();
 
 				MainActivity.progressDialog.dismiss();
-				//progressDialog.dismiss();
 				// 여기 위치가 맞는 듯
 			}
 		}
