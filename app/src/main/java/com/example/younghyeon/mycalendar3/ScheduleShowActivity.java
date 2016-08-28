@@ -25,7 +25,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -61,9 +63,7 @@ public class ScheduleShowActivity  extends Activity {
     ImageView imageViewList;
     ImageView imageViewPlus;
     //HashMap<String,ArrayList<ScheduleListItem>> scheduleHash;
-    ArrayList outScheduleList;
-    ScheduleListAdapter scheduleAdapter;
-    ArrayList<ScheduleListItem> scheduleList2;
+    ArrayList tempScheduleList;
 
     ListAdapter adapter;
 
@@ -216,7 +216,7 @@ public class ScheduleShowActivity  extends Activity {
                     intent.putExtra("memo", scheduleList.get(position).get("memo"));
                     intent.putExtra("pos", ""+position);
 
-                    Log.e("jsonerr", "id : "+ scheduleList.get(position).get("id"));
+                    Log.e("jsonerr", "id : " + scheduleList.get(position).get("id"));
                     Log.e("jsonerr", "date : " + scheduleList.get(position).get("date"));
                     Log.e("jsonerr", "memo"+ scheduleList.get(position).get("memo"));
 
@@ -356,7 +356,7 @@ public class ScheduleShowActivity  extends Activity {
             String date = intent.getStringExtra("date");
             String memo = intent.getStringExtra("memo");
 
-            Log.e("jsonerr", "pos : "+ pos);
+            Log.e("jsonerr", "pos : " + pos);
 
 //            scheduleList.set(pos, )
             HashMap<String,String> h_schedules = new HashMap<String,String>();
@@ -382,8 +382,29 @@ public class ScheduleShowActivity  extends Activity {
                 throw new RuntimeException("Unexpected adapter");
             }
 
-            //여기다가 추가시키면 됩니다.
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
+            try {
+                c.setTime(sdf.parse(date));
+                Integer hour = c.get(Calendar.HOUR_OF_DAY);
+                Integer min = c.get(Calendar.MINUTE);
 
+                String strHour = hour.toString();
+                String strMin = min.toString();
+
+                String time = strHour + "시" + strMin + "분";
+
+                ScheduleListItem aItem = new ScheduleListItem(time, memo);
+                if (tempScheduleList == null) {
+                    tempScheduleList = new ArrayList();
+                }
+
+                tempScheduleList.add(aItem);
+                CalendarMonthAdapter.updateSchedule(year, month, position, pos, tempScheduleList);
+
+            } catch (java.text.ParseException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 }
