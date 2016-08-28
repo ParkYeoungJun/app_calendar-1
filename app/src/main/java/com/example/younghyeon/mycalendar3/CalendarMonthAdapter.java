@@ -511,16 +511,17 @@ public class CalendarMonthAdapter extends BaseAdapter {
 			}
 
 			if (intCurHour > intCompareHour){
-				here = i;
+				here = i + 1;
 			}
 			else if (intCurHour == intCompareHour) {
 				if (intCurMin > intCompareMin)
-					here = i;
+					here = i + 1;
 			}
 			else break;
 		}
 		Log.e("CalendarMonthAdapter", "here " + here);
-		outList.add(here + 1, tempItem);
+
+		outList.add(here, tempItem);
 
 		scheduleHash.remove(keyStr);
 		scheduleHash.put(keyStr, outList);

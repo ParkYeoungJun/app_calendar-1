@@ -65,6 +65,8 @@ public class ScheduleShowActivity  extends Activity {
     ImageView imageViewPlus;
     //HashMap<String,ArrayList<ScheduleListItem>> scheduleHash;
     ArrayList tempScheduleList;
+    ArrayList tempScheduleList2;
+    ArrayList tempScheduleList3;
 
     ListAdapter adapter;
 
@@ -81,6 +83,9 @@ public class ScheduleShowActivity  extends Activity {
 
         imageViewList.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                // 지훈아 이 코드 지우지마
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -378,6 +383,7 @@ public class ScheduleShowActivity  extends Activity {
 
                 tempScheduleList.add(aItem);
                 CalendarMonthAdapter.updateSchedule(year, month, position, pos, tempScheduleList);
+                tempScheduleList.clear();
 
             } catch (java.text.ParseException ex) {
                 ex.printStackTrace();
@@ -395,25 +401,12 @@ public class ScheduleShowActivity  extends Activity {
             if (message != null) {
                 Toast toast = Toast.makeText(getBaseContext(), "time : " + time + ", message : " + message + ", selectedWeather : " + selectedWeather, Toast.LENGTH_LONG);
                 toast.show();
-                // 일정 추가 저장시 토스트 메시지 띄우는 거
-
-//                ScheduleListItem aItem = new ScheduleListItem(time, message);
-
-//                if (outScheduleList == null) {
-//                    outScheduleList = new ArrayList();
-//                }
-//                outScheduleList.add(aItem);
-
-//                scheduleAdapter.scheduleList = outScheduleList;
-//                scheduleAdapter.notifyDataSetChanged();
 
                 String str_curMonth = String.format("%02d", curMonth);
                 String str_curDay = String.format("%02d", curDay);
 
                 getMaxId("http://52.78.88.182/getMaxId.php");
 //                getData("http://52.78.88.182/getdata.php?date="+curYear+"-"+str_curMonth+"-"+str_curDay);
-
-
 
 //                HashMap<String,String> h_schedules = new HashMap<String,String>();
 //                Log.e("jsonerr", "asdfsdf");
@@ -432,7 +425,20 @@ public class ScheduleShowActivity  extends Activity {
 //
 //                Collections.sort(scheduleList, mapComparator);
 
+                tempScheduleList2 = CalendarMonthAdapter.getSchedule(year, month, position);
+                int size = tempScheduleList2.size();
+                ScheduleListItem aItem = new ScheduleListItem(time, message);
+                Log.e("ScheduleShowActivity", "size " + size);
+                Log.e("ScheduleShowActivity", "time " + time);
+                Log.e("ScheduleShowActivity", "message " + message);
+                tempScheduleList2.add(aItem);
 
+                if (tempScheduleList3 == null) {
+                    tempScheduleList3 = new ArrayList();
+                }
+                tempScheduleList3.add(aItem);
+                CalendarMonthAdapter.putSchedule(year, month, position, tempScheduleList2);
+                CalendarMonthAdapter.updateSchedule(year, month, position, size, tempScheduleList3);
             }
         }
     }
