@@ -26,7 +26,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -62,9 +64,9 @@ public class ScheduleShowActivity  extends Activity {
     ImageView imageViewList;
     ImageView imageViewPlus;
     //HashMap<String,ArrayList<ScheduleListItem>> scheduleHash;
-    ArrayList outScheduleList;
-    ScheduleListAdapter scheduleAdapter;
-    ArrayList<ScheduleListItem> scheduleList2;
+    ArrayList tempScheduleList;
+    ArrayList tempScheduleList2;
+    ArrayList tempScheduleList3;
 
     ListAdapter adapter;
 
@@ -81,6 +83,9 @@ public class ScheduleShowActivity  extends Activity {
 
         imageViewList.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                // 지훈아 이 코드 지우지마
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -200,7 +205,7 @@ public class ScheduleShowActivity  extends Activity {
                     intent.putExtra("memo", scheduleList.get(position).get("memo"));
                     intent.putExtra("pos", ""+position);
 
-                    Log.e("jsonerr", "id : "+ scheduleList.get(position).get("id"));
+                    Log.e("jsonerr", "id : " + scheduleList.get(position).get("id"));
                     Log.e("jsonerr", "date : " + scheduleList.get(position).get("date"));
                     Log.e("jsonerr", "memo"+ scheduleList.get(position).get("memo"));
 
@@ -333,7 +338,7 @@ public class ScheduleShowActivity  extends Activity {
             String date = intent.getStringExtra("date");
             String memo = intent.getStringExtra("memo");
 
-            Log.e("jsonerr", "pos : "+ pos);
+            Log.e("jsonerr", "pos : " + pos);
 
 //            scheduleList.set(pos, )
             HashMap<String,String> h_schedules = new HashMap<String,String>();
@@ -359,8 +364,30 @@ public class ScheduleShowActivity  extends Activity {
                 throw new RuntimeException("Unexpected adapter");
             }
 
-            //여기다가 추가시키면 됩니다.
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
+            try {
+                c.setTime(sdf.parse(date));
+                Integer hour = c.get(Calendar.HOUR_OF_DAY);
+                Integer min = c.get(Calendar.MINUTE);
 
+                String strHour = hour.toString();
+                String strMin = min.toString();
+
+                String time = strHour + "시" + strMin + "분";
+
+                ScheduleListItem aItem = new ScheduleListItem(time, memo);
+                if (tempScheduleList == null) {
+                    tempScheduleList = new ArrayList();
+                }
+
+                tempScheduleList.add(aItem);
+                CalendarMonthAdapter.updateSchedule(year, month, position, pos, tempScheduleList);
+                tempScheduleList.clear();
+
+            } catch (java.text.ParseException ex) {
+                ex.printStackTrace();
+            }
         }
         else if (requestCode == REQUEST_CODE_SCHEDULE_INPUT) {
             if (intent == null) {
@@ -374,25 +401,12 @@ public class ScheduleShowActivity  extends Activity {
             if (message != null) {
                 Toast toast = Toast.makeText(getBaseContext(), "time : " + time + ", message : " + message + ", selectedWeather : " + selectedWeather, Toast.LENGTH_LONG);
                 toast.show();
-                // 일정 추가 저장시 토스트 메시지 띄우는 거
-
-//                ScheduleListItem aItem = new ScheduleListItem(time, message);
-
-//                if (outScheduleList == null) {
-//                    outScheduleList = new ArrayList();
-//                }
-//                outScheduleList.add(aItem);
-
-//                scheduleAdapter.scheduleList = outScheduleList;
-//                scheduleAdapter.notifyDataSetChanged();
 
                 String str_curMonth = String.format("%02d", curMonth);
                 String str_curDay = String.format("%02d", curDay);
 
                 getMaxId("http://52.78.88.182/getMaxId.php");
 //                getData("http://52.78.88.182/getdata.php?date="+curYear+"-"+str_curMonth+"-"+str_curDay);
-
-
 
 //                HashMap<String,String> h_schedules = new HashMap<String,String>();
 //                Log.e("jsonerr", "asdfsdf");
@@ -411,7 +425,20 @@ public class ScheduleShowActivity  extends Activity {
 //
 //                Collections.sort(scheduleList, mapComparator);
 
+                tempScheduleList2 = CalendarMonthAdapter.getSchedule(year, month, position);
+                int size = tempScheduleList2.size();
+                ScheduleListItem aItem = new ScheduleListItem(time, message);
+                Log.e("ScheduleShowActivity", "size " + size);
+                Log.e("ScheduleShowActivity", "time " + time);
+                Log.e("ScheduleShowActivity", "message " + message);
+                tempScheduleList2.add(aItem);
 
+                if (tempScheduleList3 == null) {
+                    tempScheduleList3 = new ArrayList();
+                }
+                tempScheduleList3.add(aItem);
+                CalendarMonthAdapter.putSchedule(year, month, position, tempScheduleList2);
+                CalendarMonthAdapter.updateSchedule(year, month, position, size, tempScheduleList3);
             }
         }
     }
