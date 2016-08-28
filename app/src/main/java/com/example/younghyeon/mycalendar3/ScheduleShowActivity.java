@@ -16,6 +16,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,11 +69,11 @@ public class ScheduleShowActivity  extends Activity {
     ListAdapter adapter;
 
     public static final int REQUEST_CODE_SCHEDULE_UPDATE = 1020;
+    public static final int REQUEST_CODE_SCHEDULE_INPUT = 1021;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_schedule_list);
-
         monthText = (TextView) findViewById(R.id.monthText);
         setMonthText();
 
@@ -80,10 +81,6 @@ public class ScheduleShowActivity  extends Activity {
 
         imageViewList.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent();
-
-                setResult(RESULT_OK, intent);
-
                 finish();
             }
         });
@@ -92,11 +89,13 @@ public class ScheduleShowActivity  extends Activity {
 
         imageViewPlus.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent();
+                Intent intent = new Intent(getApplicationContext(), ScheduleInputActivity.class);
+                intent.putExtra("year", curYear);
+                intent.putExtra("month", curMonth-1);
+                intent.putExtra("day", curDay);
 
-                setResult(RESULT_OK, intent);
+                startActivityForResult(intent, REQUEST_CODE_SCHEDULE_INPUT);
 
-                finish();
             }
         });
 
@@ -110,23 +109,7 @@ public class ScheduleShowActivity  extends Activity {
 
         list = (ListView) findViewById(R.id.listView);
         scheduleList = new ArrayList<HashMap<String,String>>();
-
         getData("http://52.78.88.182/getdata.php?date="+curYear+"-"+str_curMonth+"-"+str_curDay);     //날짜 지정해서 데이터 파싱
-//        getData("http://52.78.88.182/getdata.php");
-
-//        scheduleList = (ListView)findViewById(R.id.scheduleList);
-//        scheduleAdapter = new ScheduleListAdapter(this);
-//        scheduleList.setAdapter(scheduleAdapter);
-//
-
-        // 제목에 년월일 설정
-/*
-        scheduleHash = new HashMap<String,ArrayList<ScheduleListItem>>();
-        outScheduleList = getSchedule(curDay);
-        scheduleText = (TextView) findViewById(R.id.scheduleText);
-        scheduleText.setText(outScheduleList.size());
-        여기가 잘못된 것 같다
-*/
     }
 
     protected void showList(){
@@ -158,6 +141,7 @@ public class ScheduleShowActivity  extends Activity {
                     new int[]{R.id.id, R.id.name, R.id.address}
             );
             Log.e("jsonerr", "5");
+
             list.setAdapter(adapter);
 
             list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -327,7 +311,6 @@ public class ScheduleShowActivity  extends Activity {
     }
 
 
-
     private void setMonthText() {
         Intent it = getIntent();
         curYear = it.getExtras().getInt("year");
@@ -338,12 +321,6 @@ public class ScheduleShowActivity  extends Activity {
         monthText.setText(curYear + "." + curMonth + "." + curDay);
 
     }
-//    public ArrayList<ScheduleListItem> getSchedule(int position) {
-//        String keyStr = curYear + "-" + (curMonth - 1)+ "-" + position;
-//        ArrayList<ScheduleListItem> outList = scheduleHash.get(keyStr);
-//
-//        return outList;
-//    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -406,5 +383,133 @@ public class ScheduleShowActivity  extends Activity {
                 ex.printStackTrace();
             }
         }
+        else if (requestCode == REQUEST_CODE_SCHEDULE_INPUT) {
+            if (intent == null) {
+                return;
+            }
+
+            String time = intent.getStringExtra("time");
+            String message = intent.getStringExtra("message");
+            int selectedWeather = intent.getIntExtra("weather", 0);
+
+            if (message != null) {
+                Toast toast = Toast.makeText(getBaseContext(), "time : " + time + ", message : " + message + ", selectedWeather : " + selectedWeather, Toast.LENGTH_LONG);
+                toast.show();
+                // 일정 추가 저장시 토스트 메시지 띄우는 거
+
+//                ScheduleListItem aItem = new ScheduleListItem(time, message);
+
+//                if (outScheduleList == null) {
+//                    outScheduleList = new ArrayList();
+//                }
+//                outScheduleList.add(aItem);
+
+//                scheduleAdapter.scheduleList = outScheduleList;
+//                scheduleAdapter.notifyDataSetChanged();
+
+                String str_curMonth = String.format("%02d", curMonth);
+                String str_curDay = String.format("%02d", curDay);
+
+                getMaxId("http://52.78.88.182/getMaxId.php");
+//                getData("http://52.78.88.182/getdata.php?date="+curYear+"-"+str_curMonth+"-"+str_curDay);
+
+
+
+//                HashMap<String,String> h_schedules = new HashMap<String,String>();
+//                Log.e("jsonerr", "asdfsdf");
+////                h_schedules.put(TAG_ID, scheduleList.get(pos).get("id"));
+////                h_schedules.put(TAG_DATE,date);
+////                h_schedules.put(TAG_MEMO,memo);
+//
+////                scheduleList.set(pos, h_schedules);
+//                Log.e("jsonerr", "size : "+ h_schedules.toString());
+//
+//                Comparator<Map<String, String>> mapComparator = new Comparator<Map<String, String>>() {
+//                    public int compare(Map<String, String> m1, Map<String, String> m2) {
+//                        return m1.get("date").compareTo(m2.get("date"));
+//                    }
+//                };
+//
+//                Collections.sort(scheduleList, mapComparator);
+
+
+            }
+        }
     }
+
+    public void getMaxId(String url){
+        class getMaxIdJSON extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                String uri = params[0];
+
+                BufferedReader bufferedReader = null;
+                try {
+                    URL url = new URL(uri);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    StringBuilder sb = new StringBuilder();
+
+                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                    String json;
+                    while((json = bufferedReader.readLine())!= null){
+                        sb.append(json+"\n");
+                    }
+
+                    return sb.toString().trim();
+
+                }catch(Exception e){
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String result){
+                myJSON = result;
+                try {
+                    JSONObject jsonObj = new JSONObject(myJSON);
+                    schedules = jsonObj.getJSONArray(TAG_RESULTS);
+                    for(int i=0;i<schedules.length();i++){
+                        JSONObject c = schedules.getJSONObject(i);
+                        String id = c.getString(TAG_ID);
+                        String date = c.getString(TAG_DATE);
+                        String memo = c.getString(TAG_MEMO);
+
+                        HashMap<String,String> h_schedules = new HashMap<String,String>();
+
+                        h_schedules.put(TAG_ID,id);
+                        h_schedules.put(TAG_DATE,date);
+                        h_schedules.put(TAG_MEMO,memo);
+
+                        scheduleList.add(h_schedules);
+                    }
+                    Comparator<Map<String, String>> mapComparator = new Comparator<Map<String, String>>() {
+                        public int compare(Map<String, String> m1, Map<String, String> m2) {
+                            return m1.get("date").compareTo(m2.get("date"));
+                        }
+                    };
+
+                    Collections.sort(scheduleList, mapComparator);
+
+                    if (adapter instanceof BaseAdapter) {
+                        ((BaseAdapter)adapter).notifyDataSetChanged();
+                    } else {
+                        throw new RuntimeException("Unexpected adapter");
+                    }
+
+                } catch (JSONException e) {
+                    Log.e("JSON Parser", "Error parsing data [" + e.getMessage()+"] "+myJSON);
+                    e.printStackTrace();
+                }
+
+
+//                showList();
+            }
+        }
+        getMaxIdJSON g = new getMaxIdJSON();
+        g.execute(url);
+    }
+
 }

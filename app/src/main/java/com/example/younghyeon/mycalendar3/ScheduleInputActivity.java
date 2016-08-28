@@ -272,6 +272,7 @@ public class ScheduleInputActivity extends Activity {
                     StringBuilder sb = new StringBuilder();
                     Log.e("jsonerr", "write_json1 : " + jsonObj.toString());
                     con.setDoOutput(true);
+                    con.setDoInput(true);
                     Log.e("jsonerr", "write_json2 : " + jsonObj.toString());
 
                     String data ="&" + URLEncoder.encode("data", "UTF-8") + "="+ jsonObj.toString();
@@ -301,14 +302,16 @@ public class ScheduleInputActivity extends Activity {
 //                    while((json = bufferedReader.readLine())!= null){
 //                        sb.append(json+"\n");
 //                    }
-
+                    Log.e("jsonerr", "before read");
                     BufferedReader reader=new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    Log.e("jsonerr", "ing read");
                     String line=null;
+                    Log.e("jsonerr", "ing read");
                     while((line=reader.readLine())!=null){
                         //서버응답값을 String 형태로 추가함
-                        Log.e("jsonerr", "Read : " + line+"\n");
+                        Log.e("jsonerr", "Input Read : " + line+"\n");
                     }
-
+                    Log.e("jsonerr", "after read");
 
 
 
