@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
     public static final int REQUEST_CODE_SCHEDULE_INPUT = 1001;
     public static final int WEATHER_PROGRESS_DIALOG = 1002;
     public static final int WEATHER_SAVED_DIALOG = 1003;
-    public static final int REQUEST_CODE_SCHEDULE_REMOVE = 1004;
+    public static final int REQUEST_CODE_SCHEDULE_UPDATE = 1004;
 
     private static final String BASE_URL = "http://www.google.com";
     private static String WEATHER_URL = "http://www.google.com/ig/api?weather=";
@@ -106,7 +106,7 @@ public class MainActivity extends Activity {
                         intent.putExtra("month", curMonth);
                         intent.putExtra("position", position);
                         intent.putExtra("day", day);
-                        startActivityForResult(intent, REQUEST_CODE_SCHEDULE_REMOVE);
+                        startActivityForResult(intent, REQUEST_CODE_SCHEDULE_UPDATE);
                         // 일정이 있을시에는 일정 보여주는 리스트 액티비티 띄워야 될 듯Z
                     }
                 }
@@ -409,7 +409,7 @@ public class MainActivity extends Activity {
                 scheduleAdapter.notifyDataSetChanged();
             }
         }
-        else if (requestCode == REQUEST_CODE_SCHEDULE_REMOVE){
+        else if (requestCode == REQUEST_CODE_SCHEDULE_UPDATE){
             if (intent == null) {
                 return;
             }

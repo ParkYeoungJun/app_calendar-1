@@ -8,8 +8,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import android.app.ProgressDialog;
@@ -447,6 +450,12 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		return selectedPosition;
 	}
 
+	public static void removeAllSchedule(int year, int month, int position) {
+		String keyStr = year + "-" + month + "-" + position;
+		ArrayList<ScheduleListItem> outList = scheduleHash.get(keyStr);
+		scheduleHash.remove(keyStr);
+	}
+
 	public static void removeSchedule(int year, int month, int position, int index) {
 		String keyStr = year + "-" + month + "-" + position;
 		ArrayList<ScheduleListItem> outList = scheduleHash.get(keyStr);
@@ -461,6 +470,63 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		scheduleHash.put(keyStr, outList);
 	}
 
+	public static void updateSchedule(int year, int month, int position, int index, ArrayList<ScheduleListItem> aList) {
+		String keyStr = year + "-" + month + "-" + position;
+		ArrayList<ScheduleListItem> outList = scheduleHash.get(keyStr);
+
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("HH시mm분");
+		outList.remove(index);
+		ScheduleListItem tempItem = new ScheduleListItem(aList.get(0).getTime(), aList.get(0).getMessage());
+		String curItemTime = aList.get(0).getTime();
+		int intCurHour = 0;
+		int intCurMin = 0;
+		int intCompareHour = 0;
+		int intCompareMin = 0;
+		try {
+			c.setTime(sdf.parse(curItemTime));
+			intCurHour = c.get(Calendar.HOUR_OF_DAY);
+			intCurMin = c.get(Calendar.MINUTE);
+			Log.e("CalendarMonthAdapter", "intCurHour " + intCurHour);
+			Log.e("CalendarMonthAdapter", "intCurMin " + intCurMin);
+		} catch (java.text.ParseException ex) {
+			ex.printStackTrace();
+		}
+		int here = 0;
+		for (int i = 0; i < outList.size(); i++){
+			String time = outList.get(i).getTime();
+			/*
+			Log.e("CalendarMonthAdapter", "curItemTime " + curItemTime);
+			Log.e("CalendarMonthAdapter", "time " + time);
+			Log.e("CalendarMonthAdapter", "compareTo " + time.compareTo(curItemTime));*/
+			try {
+				c.setTime(sdf.parse(time));
+				intCompareHour = c.get(Calendar.HOUR_OF_DAY);
+				intCompareMin = c.get(Calendar.MINUTE);
+				Log.e("CalendarMonthAdapter", "intCompareHour " + intCompareHour);
+				Log.e("CalendarMonthAdapter", "intCompareMin " + intCompareMin);
+
+			} catch (java.text.ParseException ex) {
+				ex.printStackTrace();
+			}
+
+			if (intCurHour > intCompareHour){
+				here = i + 1;
+			}
+			else if (intCurHour == intCompareHour) {
+				if (intCurMin > intCompareMin)
+					here = i + 1;
+			}
+			else break;
+		}
+		Log.e("CalendarMonthAdapter", "here " + here);
+
+		outList.add(here, tempItem);
+
+		scheduleHash.remove(keyStr);
+		scheduleHash.put(keyStr, outList);
+	}
+
 	/**
 	 * get schedule
 	 *
@@ -469,7 +535,7 @@ public class CalendarMonthAdapter extends BaseAdapter {
 	 * @param position
 	 * @return
 	 */
-	public ArrayList<ScheduleListItem> getSchedule(int year, int month, int position) {
+	public static ArrayList<ScheduleListItem> getSchedule(int year, int month, int position) {
 		String keyStr = year + "-" + month + "-" + position;
 		ArrayList<ScheduleListItem> outList = scheduleHash.get(keyStr);
 
@@ -483,7 +549,7 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		return outList;
 	}
 
-	public void putSchedule(int year, int month, int position, ArrayList<ScheduleListItem> aList) {
+	public static void putSchedule(int year, int month, int position, ArrayList<ScheduleListItem> aList) {
 		String keyStr = year + "-" + month + "-" + position;
 		scheduleHash.put(keyStr, aList);
 	}
@@ -557,6 +623,8 @@ public class CalendarMonthAdapter extends BaseAdapter {
 			int tempMonth = 0;
 			int tempDay = 0;
 			int prevDay = 0;
+			Integer tempHour = 0;
+			Integer tempMin = 0;
 			for (int i = 0; i < memoList.size(); i++){
 				tempDateString = dateList.get(i);
 				tempMemoString = memoList.get(i);
@@ -570,6 +638,9 @@ public class CalendarMonthAdapter extends BaseAdapter {
 					Log.e("CalendarMonthAdapter", "tempYear : "+tempYear);
 					Log.e("CalendarMonthAdapter", "tempMonth : "+tempMonth);
 					Log.e("CalendarMonthAdapter", "tempDay : "+tempDay);
+					tempHour = c.get(Calendar.HOUR_OF_DAY);
+					tempMin = c.get(Calendar.MINUTE);
+					tempDateString = tempHour.toString() + "시" + tempMin.toString() + "분";
 				} catch (java.text.ParseException ex) {
 					ex.printStackTrace();
 				}
@@ -578,9 +649,8 @@ public class CalendarMonthAdapter extends BaseAdapter {
 				}
 
 				// 이거 시간이 고정인데 이것도 바꿔줘야 되는구만
-				String time = "12시23분";
 
-				ScheduleListItem aItem = new ScheduleListItem(time, tempMemoString);
+				ScheduleListItem aItem = new ScheduleListItem(tempDateString, tempMemoString);
 				//mCalendar.
 
 				int position = calculatePosition(tempYear, tempMonth, tempDay);
