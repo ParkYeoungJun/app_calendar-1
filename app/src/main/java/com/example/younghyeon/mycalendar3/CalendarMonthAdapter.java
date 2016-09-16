@@ -25,6 +25,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 
@@ -84,6 +86,7 @@ public class CalendarMonthAdapter extends BaseAdapter {
 	ArrayList<String> memoList;
 	ArrayList<String> dateList;
 	int checkGetData = 0;
+	int checkForMonth = 0;
 
 	ArrayList outScheduleList;
 
@@ -177,14 +180,18 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		mCalendar.add(Calendar.MONTH, -1);
         recalculate();
 
+		checkForMonth = -1;
         resetDayNumbers();
         selectedPosition = -1;
+
+
 	}
 
 	public void setNextMonth() {
 		mCalendar.add(Calendar.MONTH, 1);
         recalculate();
 
+		checkForMonth = 1;
         resetDayNumbers();
         selectedPosition = -1;
 	}
@@ -346,6 +353,17 @@ public class CalendarMonthAdapter extends BaseAdapter {
 			itemView.setMsg(items[position], outList, outListSize);
 			// 일정이 있으면 사이즈 넘겨서
 		}
+
+		if(checkForMonth == 1) {
+			Animation animation = AnimationUtils.loadAnimation(mContext.getApplicationContext(), R.anim.translate_right);
+			itemView.startAnimation(animation);
+		}
+		else if(checkForMonth == -1) {
+			Animation animation = AnimationUtils.loadAnimation(mContext.getApplicationContext(), R.anim.translate_left);
+			itemView.startAnimation(animation);
+		}
+		if (position == 41) // 마지막 포지션의 아이템이 왔을때 checkForMonth 0으로 하면 애니메이션 없지롱
+			checkForMonth = 0;
 
 		// set weather
 		/*

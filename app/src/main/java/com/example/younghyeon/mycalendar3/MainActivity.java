@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -65,6 +66,7 @@ public class MainActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
         progressDialog = ProgressDialog.show(MainActivity.this, "", "데이터를 가져오는 중입니다", true, true);
@@ -107,7 +109,7 @@ public class MainActivity extends Activity {
                         intent.putExtra("position", position);
                         intent.putExtra("day", day);
                         startActivityForResult(intent, REQUEST_CODE_SCHEDULE_UPDATE);
-                        // 일정이 있을시에는 일정 보여주는 리스트 액티비티 띄워야 될 듯Z
+                        // 일정이 있을시에는 일정 보여주는 리스트 액티비티 띄워야 될 듯
                     }
                 }
                 // set schedule to the TextView
@@ -139,6 +141,7 @@ public class MainActivity extends Activity {
                 monthViewAdapter.setPreviousMonth();
                 monthViewAdapter.notifyDataSetChanged();
                 setMonthText();
+
                 //   Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
             }
 

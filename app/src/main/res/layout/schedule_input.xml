@@ -1,153 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    >
+	android:background="#B2CCFF"
+	android:gravity="center"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	>
 	<RelativeLayout
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:padding="20dp"
-	    android:layout_centerInParent="true"
-	    android:background="#aaffffff"
-	    >
-	    <LinearLayout
-	    	android:id="@+id/contentsLayout"
-		    android:orientation="vertical"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_alignParentTop="true"
-		    android:layout_margin="4dp"
-		    >
-		    <LinearLayout
-			    android:orientation="horizontal"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_margin="4dp"
-			    >
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:padding="5dp"
+		android:layout_centerInParent="true"
+		android:background="#B2CCFF"
+		>
+
+		<LinearLayout
+			android:id="@+id/contentsLayout"
+			android:orientation="vertical"
+			android:layout_width="260dp"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true"
+			android:layout_margin="4dp"
+			>
+
+			<TextView
+				android:textColor="#FFFFFF"
+				android:text="일정 추가"
+				android:gravity="center"
+				android:textSize="22dp"
+				android:layout_marginBottom="10dp"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content" />
+
+			<ImageView
+				android:layout_marginBottom="5dp"
+				android:background="@drawable/blank"
+				android:layout_width="fill_parent"
+				android:layout_height="2dp" />
+
+
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="4dp"
+				>
+				<ImageView
+					android:layout_marginRight="10dp"
+					android:id="@+id/imageList"
+					android:background="@drawable/list2"
+					android:layout_width="45dp"
+					android:layout_height="45dp" />
+
+				<!--
 				<TextView
 					android:id="@+id/messageLabel"
-					android:text="  일      정  "
-					android:textColor="#ff222222"
-					android:textSize="16dp"
+					android:text="  일정  "
+					android:textColor="#CFCFCF"
+					android:textSize="18dp"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					/>
+					/> -->
+
 				<EditText
 					android:id="@+id/messageInput"
-					android:layout_width="120dp"
+					android:layout_width="180dp"
 					android:layout_height="wrap_content"
-					android:layout_alignBaseline="@id/messageLabel"
+					android:hint="일정을 입력하세요"
+					android:layout_alignBaseline="@id/imageList"
 					android:inputType="text"
 					/>
+
 			</LinearLayout>
 			<LinearLayout
-			    android:orientation="horizontal"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_margin="4dp"
-			    >
+				android:orientation="horizontal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="4dp"
+				>
+				<ImageView
+					android:id="@+id/imageClock"
+					android:layout_marginRight="10dp"
+					android:background="@drawable/clock2"
+					android:layout_width="45dp"
+					android:layout_height="45dp" />
+				<!--
 				<TextView
 					android:id="@+id/birthLabel1"
-					android:text="  시      간  "
-					android:textColor="#ff222222"
-					android:textSize="16dp"
+					android:text="  시간  "
+					android:textColor="#CFCFCF"
+					android:textSize="18dp"
 					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					/>
+					android:layout_height="wrap_content" -->
+				/>
 				<Button
+					android:layout_alignBaseline="@id/imageClock"
+					android:background="#FFFFFF"
 					android:id="@+id/timeButton"
-					android:layout_width="120dp"
-					android:layout_height="wrap_content"
-					android:text=""
+					android:layout_width="180dp"
+					android:layout_height="40dp"
+
 					/>
 			</LinearLayout>
-			<LinearLayout
-			    android:orientation="horizontal"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_margin="4dp"
-			    >
-				<TextView
-					android:id="@+id/birthLabel2"
-					android:text="  날      씨  "
-					android:textColor="#ff222222"
-					android:textSize="16dp"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					/>
-			</LinearLayout>
-			<LinearLayout
-			    android:orientation="horizontal"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_margin="4dp"
-			    >
-				<ImageView
-					android:id="@+id/weather01Button"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="30dp"
-					android:src="@drawable/sunny"
-					android:scaleType="centerInside"
-					android:padding="2dp"
-					android:background="#ffffffff"
-					/>
-				<ImageView
-					android:id="@+id/weather02Button"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="4dp"
-					android:src="@drawable/cloudy"
-					android:scaleType="centerInside"
-					android:padding="2dp"
-					android:background="#ffffffff"
-					/>
-				<ImageView
-					android:id="@+id/weather03Button"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="4dp"
-					android:src="@drawable/rain"
-					android:scaleType="centerInside"
-					android:padding="2dp"
-					android:background="#ffffffff"
-					/>
-				<ImageView
-					android:id="@+id/weather04Button"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="4dp"
-					android:src="@drawable/snow"
-					android:scaleType="centerInside"
-					android:padding="2dp"
-					android:background="#ffffffff"
-					/>
-			</LinearLayout>
+
 		</LinearLayout>
-	    <LinearLayout
-		    android:orientation="horizontal"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_below="@+id/contentsLayout"
-		    android:layout_centerHorizontal="true"
-		    android:layout_marginTop="20dp"
-		    >
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/contentsLayout"
+			android:layout_centerHorizontal="true"
+			android:layout_marginTop="20dp"
+			>
+
 			<Button
+				android:background="#FFFFFF"
 				android:id="@+id/saveButton"
-				android:layout_width="100dp"
-				android:layout_height="wrap_content"
+				android:layout_width="130dp"
+				android:layout_height="25dp"
 				android:text="저 장"
-				android:textSize="18dp"
-				android:textStyle="bold"
+				android:textSize="16dp"
 				/>
 			<Button
+				android:background="#FFFFFF"
 				android:id="@+id/closeButton"
-				android:layout_width="100dp"
-				android:layout_height="wrap_content"
+				android:layout_width="130dp"
+				android:layout_height="25dp"
 				android:layout_marginLeft="10dp"
 				android:text="닫 기"
-				android:textSize="18dp"
-				android:textStyle="bold"
+				android:textSize="16dp"
 				/>
 		</LinearLayout>
 	</RelativeLayout>
