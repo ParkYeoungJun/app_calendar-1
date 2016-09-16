@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -56,9 +57,8 @@ public class ScheduleInputActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.schedule_input);
-
-        setTitle("일정 추가");
 
         Intent it = getIntent();
         curYear = it.getExtras().getInt("year");
@@ -75,33 +75,34 @@ public class ScheduleInputActivity extends Activity {
             }
         });
 
-        weather01Button = (ImageView) findViewById(R.id.weather01Button);
-        weather01Button.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                selectWeatherButton(0);
-            }
-        });
 
-        weather02Button = (ImageView) findViewById(R.id.weather02Button);
-        weather02Button.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                selectWeatherButton(1);
-            }
-        });
-
-        weather03Button = (ImageView) findViewById(R.id.weather03Button);
-        weather03Button.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                selectWeatherButton(2);
-            }
-        });
-
-        weather04Button = (ImageView) findViewById(R.id.weather04Button);
-        weather04Button.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                selectWeatherButton(3);
-            }
-        });
+//        weather01Button = (ImageView) findViewById(R.id.weather01Button);
+//        weather01Button.setOnClickListener(new OnClickListener() {
+//            public void onClick(View v) {
+//                selectWeatherButton(0);
+//            }
+//        });
+//
+//        weather02Button = (ImageView) findViewById(R.id.weather02Button);
+//        weather02Button.setOnClickListener(new OnClickListener() {
+//            public void onClick(View v) {
+//                selectWeatherButton(1);
+//            }
+//        });
+//
+//        weather03Button = (ImageView) findViewById(R.id.weather03Button);
+//        weather03Button.setOnClickListener(new OnClickListener() {
+//            public void onClick(View v) {
+//                selectWeatherButton(2);
+//            }
+//        });
+//
+//        weather04Button = (ImageView) findViewById(R.id.weather04Button);
+//        weather04Button.setOnClickListener(new OnClickListener() {
+//            public void onClick(View v) {
+//                selectWeatherButton(3);
+//            }
+//        });
 
         Button saveButton = (Button) findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new OnClickListener() {
@@ -119,7 +120,7 @@ public class ScheduleInputActivity extends Activity {
                 sqlTimeStr = curYear + "-" + String.format("%02d", curMonth) + "-" + String.format("%02d", curDay);
                 sqlTimeStr += " " +  String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMin) + ":00";
                 memo = messageStr;
-                Log.e("jsonerr", "sqlTimeStr : "+sqlTimeStr);
+                Log.e("jsonerr", "sqlTimeStr : " + sqlTimeStr);
 
                 postData("http://52.78.88.182/insertdata.php");
 
@@ -129,7 +130,7 @@ public class ScheduleInputActivity extends Activity {
                 Intent intent = new Intent();
                 intent.putExtra("time", timeStr);
                 intent.putExtra("message", messageStr);
-                intent.putExtra("weather", selectedWeather);
+//                intent.putExtra("weather", selectedWeather);
 
                 setResult(RESULT_OK, intent);
 
@@ -151,52 +152,52 @@ public class ScheduleInputActivity extends Activity {
 
         // process the passed intent
         Intent intent = getIntent();
-        String weatherIconUrl = intent.getStringExtra("weatherIconUrl");
-        if (weatherIconUrl != null) {
-            File iconFile = new File(weatherIconUrl);
-            String iconFileName = iconFile.getName();
-            Log.d(TAG, "weather icon file name : " + iconFileName);
-
-            if (iconFileName != null) {
-                if (iconFileName.equals("sunny.gif")) {
-                    selectWeatherButton(0);
-                } else if (iconFileName.equals("cloudy.gif")) {
-                    selectWeatherButton(1);
-                } else if (iconFileName.equals("rain.gif")) {
-                    selectWeatherButton(2);
-                } else if (iconFileName.equals("snow.gif")) {
-                    selectWeatherButton(3);
-                } else {
-                    Log.d(TAG, "weather icon is not found.");
-                    selectWeatherButton(0);
-                }
-            } else {
-                selectWeatherButton(0);
-            }
-        } else {
-            selectWeatherButton(0);
-        }
+//        String weatherIconUrl = intent.getStringExtra("weatherIconUrl");
+//        if (weatherIconUrl != null) {
+//            File iconFile = new File(weatherIconUrl);
+//            String iconFileName = iconFile.getName();
+//            Log.d(TAG, "weather icon file name : " + iconFileName);
+//
+//            if (iconFileName != null) {
+//                if (iconFileName.equals("sunny.gif")) {
+//                    selectWeatherButton(0);
+//                } else if (iconFileName.equals("cloudy.gif")) {
+//                    selectWeatherButton(1);
+//                } else if (iconFileName.equals("rain.gif")) {
+//                    selectWeatherButton(2);
+//                } else if (iconFileName.equals("snow.gif")) {
+//                    selectWeatherButton(3);
+//                } else {
+//                    Log.d(TAG, "weather icon is not found.");
+//                    selectWeatherButton(0);
+//                }
+//            } else {
+//                selectWeatherButton(0);
+//            }
+//        } else {
+//            selectWeatherButton(0);
+//        }
 
     }
 
-    private void selectWeatherButton(int index) {
-        selectedWeather = index;
-
-        weather01Button.setBackgroundColor(Color.WHITE);
-        weather02Button.setBackgroundColor(Color.WHITE);
-        weather03Button.setBackgroundColor(Color.WHITE);
-        weather04Button.setBackgroundColor(Color.WHITE);
-
-        if (selectedWeather == 0) {
-            weather01Button.setBackgroundColor(Color.RED);
-        } else if (selectedWeather == 1) {
-            weather02Button.setBackgroundColor(Color.RED);
-        } else if (selectedWeather == 2) {
-            weather03Button.setBackgroundColor(Color.RED);
-        } else if (selectedWeather == 3) {
-            weather04Button.setBackgroundColor(Color.RED);
-        }
-    }
+//    private void selectWeatherButton(int index) {
+//        selectedWeather = index;
+//
+//        weather01Button.setBackgroundColor(Color.WHITE);
+//        weather02Button.setBackgroundColor(Color.WHITE);
+//        weather03Button.setBackgroundColor(Color.WHITE);
+//        weather04Button.setBackgroundColor(Color.WHITE);
+//
+//        if (selectedWeather == 0) {
+//            weather01Button.setBackgroundColor(Color.RED);
+//        } else if (selectedWeather == 1) {
+//            weather02Button.setBackgroundColor(Color.RED);
+//        } else if (selectedWeather == 2) {
+//            weather03Button.setBackgroundColor(Color.RED);
+//        } else if (selectedWeather == 3) {
+//            weather04Button.setBackgroundColor(Color.RED);
+//        }
+//    }
 
     protected Dialog onCreateDialog(int id) {
         switch (id) {

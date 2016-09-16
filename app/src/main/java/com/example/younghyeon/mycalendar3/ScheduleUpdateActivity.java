@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -49,9 +50,8 @@ public class ScheduleUpdateActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.schedule_update);
-
-        setTitle("일정 수정");
 
         Intent it = getIntent();
         cur_id = Integer.parseInt(it.getExtras().getString("id"));

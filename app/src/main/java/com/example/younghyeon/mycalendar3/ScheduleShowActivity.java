@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.util.ChineseCalendar;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,6 +54,9 @@ public class ScheduleShowActivity  extends Activity {
     ListView list;
 
     TextView monthText;
+    TextView lunarText;
+    private ChineseCalendar chineseCal;
+
     int curYear;
     int curMonth;
     int curDay;
@@ -78,6 +82,9 @@ public class ScheduleShowActivity  extends Activity {
         setContentView(R.layout.day_schedule_list);
         monthText = (TextView) findViewById(R.id.monthText);
         setMonthText();
+
+        lunarText = (TextView) findViewById(R.id.lunarText);
+        setLunarText();
 
         imageViewList = (ImageView) findViewById(R.id.backButton);
 
@@ -132,18 +139,37 @@ public class ScheduleShowActivity  extends Activity {
 
                 HashMap<String,String> h_schedules = new HashMap<String,String>();
 
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
+                String tempDateString = "";
+                Integer tempHour = 0;
+                Integer tempMin = 0;
+                try {
+                    calendar.setTime(sdf.parse(date));
+                    tempHour = calendar.get(Calendar.HOUR_OF_DAY);
+                    tempMin = calendar.get(Calendar.MINUTE);
+                    tempDateString = tempHour.toString() + "시 " + tempMin.toString() + "분";
+                } catch (java.text.ParseException ex) {
+                    ex.printStackTrace();
+                }
+
                 h_schedules.put(TAG_ID,id);
-                h_schedules.put(TAG_DATE,date);
+                h_schedules.put(TAG_DATE,tempDateString);
                 h_schedules.put(TAG_MEMO,memo);
 
                 scheduleList.add(h_schedules);
             }
             Log.e("jsonerr", "4");
 //            adapter = new SimpleAdapter(
+//            adapter = new SimpleAdapter(
+//                    ScheduleShowActivity.this, scheduleList, R.layout.list_item,
+//                    new String[]{TAG_ID,TAG_DATE,TAG_MEMO},
+//                    new int[]{R.id.id, R.id.name, R.id.address}
+//            );
             adapter = new SimpleAdapter(
                     ScheduleShowActivity.this, scheduleList, R.layout.list_item,
-                    new String[]{TAG_ID,TAG_DATE,TAG_MEMO},
-                    new int[]{R.id.id, R.id.name, R.id.address}
+                    new String[]{TAG_DATE,TAG_MEMO},
+                    new int[]{R.id.name, R.id.address}
             );
             Log.e("jsonerr", "5");
 
@@ -315,6 +341,14 @@ public class ScheduleShowActivity  extends Activity {
         g.execute(url);
     }
 
+    private void setLunarText() {
+        String date = ""+Integer.toString(curYear)+Integer.toString(curMonth)+Integer.toString(curDay);
+        Log.e("ShowActivity", "date : " + date);
+        SolLun  solLun = new SolLun();
+        String str = solLun.SolToLun(curYear, curMonth, curDay);
+        Log.e("ShowActivity", "date2 : " + str);
+        lunarText.setText("  음력  "+ str);
+    }
 
     private void setMonthText() {
         Intent it = getIntent();
