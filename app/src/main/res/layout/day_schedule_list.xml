@@ -5,8 +5,8 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="61dp"
-        android:background="@android:color/holo_purple"
-        >
+        android:background="#33b5e5" >
+
         <ImageButton
             android:id="@+id/plusButton"
             android:layout_width="45dp"
@@ -14,13 +14,17 @@
             android:background="@drawable/plus2"
             android:layout_alignParentRight="true"
             />
+
         <ImageButton
+            android:paddingRight="5dp"
+            android:paddingTop="8dp"
             android:id="@+id/backButton"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:background="@drawable/list"
+            android:background="@drawable/back"
             android:layout_alignParentLeft="true"
             />
+
         <TextView
             android:id="@+id/monthText"
             android:layout_width="160dp"
@@ -32,19 +36,39 @@
             android:gravity="center_horizontal"
             android:layout_centerInParent="true"
             />
+<!--
+        <TextView
+            android:gravity="center"
+            android:layout_below="@+id/monthText"
+            android:textColor="@android:color/white"
+            android:id="@+id/lunarText"
+            android:textSize="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+            -->
+
     </RelativeLayout>
     <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+        tools:context=".MainActivity">
+
+        <TextView
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:layout_below="@+id/monthText"
+            android:background="#D8D8D8"
+            android:id="@+id/lunarText"
+            android:textSize="14dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/listView" />
+
     </LinearLayout>
 </LinearLayout>

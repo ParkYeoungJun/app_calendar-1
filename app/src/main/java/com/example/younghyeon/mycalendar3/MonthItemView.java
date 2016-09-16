@@ -6,6 +6,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,6 +49,8 @@ public class MonthItemView extends RelativeLayout {
 	private void init() {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.month_item, this, true);
+
+
 
 		itemContainer = (RelativeLayout) findViewById(R.id.itemContainer);
 		dayText = (TextView) findViewById(R.id.dayText);
