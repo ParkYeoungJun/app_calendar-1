@@ -114,7 +114,6 @@ public class ScheduleInputActivity extends Activity {
                     return ;
                 }
 
-
                 String timeStr = timeButton.getText().toString();
 
                 sqlTimeStr = curYear + "-" + String.format("%02d", curMonth) + "-" + String.format("%02d", curDay);
