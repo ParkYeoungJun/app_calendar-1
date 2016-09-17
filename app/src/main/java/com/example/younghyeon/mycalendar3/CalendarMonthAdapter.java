@@ -196,6 +196,25 @@ public class CalendarMonthAdapter extends BaseAdapter {
         selectedPosition = -1;
 	}
 
+	public void setInputMonth(int year, int month) {
+		int temp1 = 0;
+		int temp2 = 0;
+		temp1 = year - curYear;
+		temp2 = month - curMonth - 1;
+		int index = temp1 * 12 + temp2;
+		Log.e("hi", "wow1 " + temp1 + " "  +year + " "+ curYear);
+		Log.e("hi", "wow2 " + temp2 + " "  +month + " "+ curMonth);
+		mCalendar.add(Calendar.MONTH, index);
+		recalculate();
+
+		checkForMonth = 1;
+		resetDayNumbers();
+		selectedPosition = -1;
+		notifyDataSetChanged();
+
+		Log.e("hi", "wow3 " + temp1 + " "  +temp2 + " "+ index);
+	}
+
 	public void resetDayNumbers() {
 		for (int i = 0; i < 42; i++) {
 			// calculate day number

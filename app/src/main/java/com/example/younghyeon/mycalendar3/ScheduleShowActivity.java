@@ -226,14 +226,41 @@ public class ScheduleShowActivity  extends Activity {
 //                     Toast.makeText(getApplicationContext(), "hi"+id, Toast.LENGTH_LONG).show();
 //                    Toast.makeText(getApplicationContext(), "hi"+scheduleList.get(position).get("date"), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), ScheduleUpdateActivity.class);
+
+                    Calendar c = Calendar.getInstance();
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH시 mm분");
+                    String date1 = scheduleList.get(position).get("date");
+                    Log.e("jsonerr", "date : " + date1);
+                    try {
+                        c.setTime(sdf.parse(date1));
+                        Integer hour = c.get(Calendar.HOUR_OF_DAY);
+                        Integer min = c.get(Calendar.MINUTE);
+
+                        String strHour = hour.toString();
+                        String strMin = min.toString();
+
+                        String date = "";
+                        Log.e("jsonerr", "date : " + date1);
+                        if (curMonth < 10) {
+                            date = curYear + "-0" + curMonth + "-" + curDay + " " + strHour + ":" + strMin + ":00";
+                        } else {
+                            date = curYear + "-" + curMonth + "-" + curDay + " " + strHour + ":" + strMin + ":00";
+                        }
+                        intent.putExtra("date", date);
+                        Log.e("jsonerr", "date : " + date);
+                    } catch (java.text.ParseException ex) {
+                        ex.printStackTrace();
+                    }
+
                     intent.putExtra("id", scheduleList.get(position).get("id"));
-                    intent.putExtra("date", scheduleList.get(position).get("date"));
+
+
                     intent.putExtra("memo", scheduleList.get(position).get("memo"));
-                    intent.putExtra("pos", ""+position);
+                    intent.putExtra("pos", "" + position);
 
                     Log.e("jsonerr", "id : " + scheduleList.get(position).get("id"));
-                    Log.e("jsonerr", "date : " + scheduleList.get(position).get("date"));
-                    Log.e("jsonerr", "memo"+ scheduleList.get(position).get("memo"));
+
+                    Log.e("jsonerr", "memo : "+ scheduleList.get(position).get("memo"));
 
                     startActivityForResult(intent, REQUEST_CODE_SCHEDULE_UPDATE);
 
@@ -364,6 +391,7 @@ public class ScheduleShowActivity  extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
+        HashMap<String,String> h_schedules = new HashMap<String,String>();
         if (requestCode == REQUEST_CODE_SCHEDULE_UPDATE) {
             if (intent == null) {
                 return;
@@ -372,13 +400,42 @@ public class ScheduleShowActivity  extends Activity {
             String date = intent.getStringExtra("date");
             String memo = intent.getStringExtra("memo");
 
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
+            try {
+                c.setTime(sdf.parse(date));
+                Integer hour = c.get(Calendar.HOUR_OF_DAY);
+                Integer min = c.get(Calendar.MINUTE);
+
+                String strHour = hour.toString();
+                String strMin = min.toString();
+
+                String time = strHour + "시 " + strMin + "분";
+                h_schedules.put(TAG_DATE,time);
+
+                date = "";
+                date = curYear + "-" +curMonth + "-" +curDay + " " + strHour +":"+ strMin +":00";
+                ScheduleListItem aItem = new ScheduleListItem(time, memo);
+                if (tempScheduleList == null) {
+                    tempScheduleList = new ArrayList();
+                }
+
+                tempScheduleList.add(aItem);
+                CalendarMonthAdapter.updateSchedule(year, month, position, pos, tempScheduleList);
+                tempScheduleList.clear();
+
+            } catch (java.text.ParseException ex) {
+                ex.printStackTrace();
+            }
+
+
             Log.e("jsonerr", "pos : " + pos);
 
 //            scheduleList.set(pos, )
-            HashMap<String,String> h_schedules = new HashMap<String,String>();
+
             Log.e("jsonerr", "asdfsdf");
             h_schedules.put(TAG_ID, scheduleList.get(pos).get("id"));
-            h_schedules.put(TAG_DATE,date);
+
             h_schedules.put(TAG_MEMO,memo);
 
             scheduleList.set(pos, h_schedules);
@@ -396,31 +453,6 @@ public class ScheduleShowActivity  extends Activity {
                 ((BaseAdapter)adapter).notifyDataSetChanged();
             } else {
                 throw new RuntimeException("Unexpected adapter");
-            }
-
-            Calendar c = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
-            try {
-                c.setTime(sdf.parse(date));
-                Integer hour = c.get(Calendar.HOUR_OF_DAY);
-                Integer min = c.get(Calendar.MINUTE);
-
-                String strHour = hour.toString();
-                String strMin = min.toString();
-
-                String time = strHour + "시" + strMin + "분";
-
-                ScheduleListItem aItem = new ScheduleListItem(time, memo);
-                if (tempScheduleList == null) {
-                    tempScheduleList = new ArrayList();
-                }
-
-                tempScheduleList.add(aItem);
-                CalendarMonthAdapter.updateSchedule(year, month, position, pos, tempScheduleList);
-                tempScheduleList.clear();
-
-            } catch (java.text.ParseException ex) {
-                ex.printStackTrace();
             }
         }
         else if (requestCode == REQUEST_CODE_SCHEDULE_INPUT) {
@@ -519,8 +551,22 @@ public class ScheduleShowActivity  extends Activity {
 
                         HashMap<String,String> h_schedules = new HashMap<String,String>();
 
+                        Calendar calendar = Calendar.getInstance();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
+                        String tempDateString = "";
+                        Integer tempHour = 0;
+                        Integer tempMin = 0;
+                        try {
+                            calendar.setTime(sdf.parse(date));
+                            tempHour = calendar.get(Calendar.HOUR_OF_DAY);
+                            tempMin = calendar.get(Calendar.MINUTE);
+                            tempDateString = tempHour.toString() + "시 " + tempMin.toString() + "분";
+                        } catch (java.text.ParseException ex) {
+                            ex.printStackTrace();
+                        }
+
                         h_schedules.put(TAG_ID,id);
-                        h_schedules.put(TAG_DATE,date);
+                        h_schedules.put(TAG_DATE,tempDateString);
                         h_schedules.put(TAG_MEMO,memo);
 
                         scheduleList.add(h_schedules);
