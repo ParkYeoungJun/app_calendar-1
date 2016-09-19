@@ -454,6 +454,8 @@ public class ScheduleShowActivity  extends Activity {
             } else {
                 throw new RuntimeException("Unexpected adapter");
             }
+
+            Toast.makeText(getApplicationContext(), "일정이 수정되었습니다.", Toast.LENGTH_SHORT).show();
         }
         else if (requestCode == REQUEST_CODE_SCHEDULE_INPUT) {
             if (intent == null) {
@@ -465,8 +467,8 @@ public class ScheduleShowActivity  extends Activity {
             int selectedWeather = intent.getIntExtra("weather", 0);
 
             if (message != null) {
-                Toast toast = Toast.makeText(getBaseContext(), "time : " + time + ", message : " + message + ", selectedWeather : " + selectedWeather, Toast.LENGTH_LONG);
-                toast.show();
+//                Toast toast = Toast.makeText(getBaseContext(), "time : " + time + ", message : " + message + ", selectedWeather : " + selectedWeather, Toast.LENGTH_LONG);
+//                toast.show();
 
                 String str_curMonth = String.format("%02d", curMonth);
                 String str_curDay = String.format("%02d", curDay);
@@ -505,6 +507,7 @@ public class ScheduleShowActivity  extends Activity {
                 tempScheduleList3.add(aItem);
                 CalendarMonthAdapter.putSchedule(year, month, position, tempScheduleList2);
                 CalendarMonthAdapter.updateSchedule(year, month, position, size, tempScheduleList3);
+                Toast.makeText(getApplicationContext(), "일정이 추가되었습니다.", Toast.LENGTH_SHORT).show();
             }
         }
     }

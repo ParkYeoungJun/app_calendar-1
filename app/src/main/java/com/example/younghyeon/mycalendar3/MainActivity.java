@@ -8,7 +8,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -126,7 +125,7 @@ public class MainActivity extends Activity {
         plusbutton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (selectedDay == 0) {
-                    Toast.makeText(MainActivity.this, "please select day", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "날짜를 선택해주세요.", Toast.LENGTH_SHORT).show();
                     /*
                     int position = monthViewAdapter.getTodayPosition();
                     MonthItem curItem = (MonthItem) monthViewAdapter.getItem(position);
@@ -419,8 +418,8 @@ public class MainActivity extends Activity {
             int selectedWeather = intent.getIntExtra("weather", 0);
 
             if (message != null) {
-                Toast toast = Toast.makeText(getBaseContext(), "time : " + time + ", message : " + message + ", selectedWeather : " + selectedWeather, Toast.LENGTH_LONG);
-                toast.show();
+//                Toast toast = Toast.makeText(getBaseContext(), "time : " + time + ", message : " + message + ", selectedWeather : " + selectedWeather, Toast.LENGTH_LONG);
+//                toast.show();
                 // 일정 추가 저장시 토스트 메시지 띄우는 거
 
 
@@ -435,6 +434,7 @@ public class MainActivity extends Activity {
 
                 scheduleAdapter.scheduleList = outScheduleList;
                 scheduleAdapter.notifyDataSetChanged();
+                Toast.makeText(getApplicationContext(), "일정이 추가되었습니다.", Toast.LENGTH_SHORT).show();
             }
         }
         else if (requestCode == REQUEST_CODE_SCHEDULE_UPDATE){
