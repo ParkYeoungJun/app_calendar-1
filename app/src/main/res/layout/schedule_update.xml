@@ -115,7 +115,7 @@
 				android:background="#FFFFFF"
 				android:id="@+id/u_saveButton"
 				android:layout_width="130dp"
-				android:layout_height="25dp"
+				android:layout_height="30dp"
 				android:text="저 장"
 				android:textSize="16dp"
 				/>
@@ -123,7 +123,7 @@
 				android:background="#FFFFFF"
 				android:id="@+id/u_closeButton"
 				android:layout_width="130dp"
-				android:layout_height="25dp"
+				android:layout_height="30dp"
 				android:layout_marginLeft="10dp"
 				android:text="닫 기"
 				android:textSize="16dp"

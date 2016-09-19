@@ -3,10 +3,12 @@ package com.example.younghyeon.mycalendar3;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends Activity {
     public static final String TAG = "CalendarMonthViewActivity";
@@ -34,7 +38,6 @@ public class MainActivity extends Activity {
 
     TextView monthText;
 
-
     int curYear;
     int curMonth;
     int selectedDay;
@@ -43,6 +46,7 @@ public class MainActivity extends Activity {
     EditText scheduleInput;
     Button saveButton;
     ImageButton plusbutton;
+    Button monthButton;
 
     ListView scheduleList;
     ScheduleListAdapter scheduleAdapter;
@@ -52,6 +56,7 @@ public class MainActivity extends Activity {
     public static final int WEATHER_PROGRESS_DIALOG = 1002;
     public static final int WEATHER_SAVED_DIALOG = 1003;
     public static final int REQUEST_CODE_SCHEDULE_UPDATE = 1004;
+
 
     private static final String BASE_URL = "http://www.google.com";
     private static String WEATHER_URL = "http://www.google.com/ig/api?weather=";
@@ -86,7 +91,7 @@ public class MainActivity extends Activity {
                 monthViewAdapter.notifyDataSetChanged();
 
                 outScheduleList = monthViewAdapter.getSchedule(position);
-                    if (outScheduleList == null) {
+                if (outScheduleList == null) {
                     outScheduleList = new ArrayList<ScheduleListItem>();
                 }
 
@@ -100,7 +105,7 @@ public class MainActivity extends Activity {
                         showScheduleInput();
                         // 일정이 없을시에는 일정 추가
                     } else {
-                       // showScheduleInput();
+                        // showScheduleInput();
 
                         Intent intent = new Intent(getApplicationContext(), ScheduleShowActivity.class);
 //                        intent.putExtra("_outScheduleList", monthViewAdapter.getSchedule(position));
@@ -120,24 +125,25 @@ public class MainActivity extends Activity {
         plusbutton = (ImageButton) findViewById(R.id.plusButton);
         plusbutton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (selectedDay == 0){
+                if (selectedDay == 0) {
                     Toast.makeText(MainActivity.this, "please select day", Toast.LENGTH_SHORT).show();
                     /*
                     int position = monthViewAdapter.getTodayPosition();
                     MonthItem curItem = (MonthItem) monthViewAdapter.getItem(position);
                     int day = curItem.getDay();
                     selectedDay = curItem.getDay();*/
-                }
-                else showScheduleInput();
+                } else showScheduleInput();
             }
         });
 
         monthView.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
             public void onSwipeTop() {
-                Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
             }
 
             public void onSwipeRight() {
+                selectedDay = 0;
+                curPosition = 0;
                 monthViewAdapter.setPreviousMonth();
                 monthViewAdapter.notifyDataSetChanged();
                 setMonthText();
@@ -146,6 +152,8 @@ public class MainActivity extends Activity {
             }
 
             public void onSwipeLeft() {
+                selectedDay = 0;
+                curPosition = 0;
                 monthViewAdapter.setNextMonth();
                 monthViewAdapter.notifyDataSetChanged();
                 setMonthText();
@@ -153,12 +161,23 @@ public class MainActivity extends Activity {
             }
 
             public void onSwipeBottom() {
-                Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
             }
         });
 
 
-
+        monthButton = (Button) findViewById(R.id.monthText);
+        monthButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Dialog dia = null;
+                final Calendar c = Calendar.getInstance();
+                MonthYearPickerDialog pd = new MonthYearPickerDialog();
+                pd.setListener(mDateSetListener);
+                pd.show(getFragmentManager(), "MonthYearPickerDialog");
+//                createDialogWithoutDateField().show();
+            }
+        });
 
         monthText = (TextView) findViewById(R.id.monthText);
         setMonthText();
@@ -188,17 +207,23 @@ public class MainActivity extends Activity {
 
         curPosition = -1;
 
-        scheduleList = (ListView)findViewById(R.id.scheduleList);
+        scheduleList = (ListView) findViewById(R.id.scheduleList);
         scheduleAdapter = new ScheduleListAdapter(this);
         scheduleList.setAdapter(scheduleAdapter);
     }
 
+    private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            monthViewAdapter.setInputMonth(year, monthOfYear);
+            setMonthText();
+        }
+    };
 
     private void setMonthText() {
         curYear = monthViewAdapter.getCurYear();
         curMonth = monthViewAdapter.getCurMonth();
 
-        monthText.setText(curYear + "." + (curMonth+1) + "");
+        monthText.setText(curYear + "." + (curMonth+1) + "\n" + "    ∨    ");
         // curMonth에 +1은 왜함?
         //monthText.setText(curYear + "년  " + (curMonth+1) + "월");
     }
