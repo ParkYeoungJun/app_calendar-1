@@ -38,6 +38,7 @@ public class MainActivity extends Activity {
 
     TextView monthText;
 
+
     int curYear;
     int curMonth;
     int selectedDay;
@@ -223,7 +224,7 @@ public class MainActivity extends Activity {
         curYear = monthViewAdapter.getCurYear();
         curMonth = monthViewAdapter.getCurMonth();
 
-        monthText.setText(curYear + "." + (curMonth+1) + "\n" + "    ∨    ");
+        monthText.setText(curYear + "." + (curMonth+1) + "\n" + "    ﹀    ");
         // curMonth에 +1은 왜함?
         //monthText.setText(curYear + "년  " + (curMonth+1) + "월");
     }
