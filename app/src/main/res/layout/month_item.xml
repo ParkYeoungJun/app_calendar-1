@@ -30,6 +30,8 @@
 		android:layout_alignParentLeft="true"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:maxLines="1"
+		android:ellipsize="end"
 		android:background="@android:color/holo_blue_bright"
 		/>
 	<TextView
@@ -39,6 +41,8 @@
 		android:layout_alignParentLeft="true"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:maxLines="1"
+		android:ellipsize="end"
 		android:background="@android:color/holo_green_light"
 		/>
 	<TextView
@@ -48,6 +52,8 @@
 		android:layout_alignParentLeft="true"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:maxLines="1"
+		android:ellipsize="end"
 		android:background="@android:color/holo_orange_light"
 		/>
 	<TextView
@@ -55,6 +61,7 @@
 		android:layout_below="@+id/dayMsg3"
 		android:textSize="11dp"
 		android:layout_alignParentLeft="true"
+		android:maxLines="1"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		/>

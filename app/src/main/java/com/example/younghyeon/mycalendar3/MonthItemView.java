@@ -2,16 +2,11 @@ package com.example.younghyeon.mycalendar3;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -29,6 +24,7 @@ public class MonthItemView extends RelativeLayout {
 	private ImageView weatherImage;
 	private String tempStr = "";
 	private String resultStr = "1234..";
+//	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
 	public MonthItemView(Context context) {
 		super(context);
@@ -54,6 +50,7 @@ public class MonthItemView extends RelativeLayout {
 
 		itemContainer = (RelativeLayout) findViewById(R.id.itemContainer);
 		dayText = (TextView) findViewById(R.id.dayText);
+//		dayText.setLayoutParams(params);
 		weatherImage = (ImageView) findViewById(R.id.weatherImage);
 		dayMsg1 = (TextView) findViewById(R.id.dayMsg1);
 		dayMsg2 = (TextView) findViewById(R.id.dayMsg2);
@@ -94,101 +91,103 @@ public class MonthItemView extends RelativeLayout {
 
 		if(size == 1) {
 			tempStr = aList.get(0).getMessage();
-			if ( tempStr.length() > 4){
-				resultStr = tempStr.substring(0,4);
-				dayMsg1.setText(resultStr + "..");
+//			if ( tempStr.length() > 4){
+//				resultStr = tempStr.substring(0,4);
 
-			}
-			else {
-				dayMsg1.setText(tempStr);
-			}
+//			dayMsg1.setLayoutParams(params);
+			dayMsg1.setText(tempStr);
+
+//			}
+//			else {
+//				dayMsg1.setText(tempStr);
+//			}
 			dayMsg2.setText("");
 			dayMsg3.setText("");
 			dayMsg4.setText("");
 		}
 		else if(size == 2) {
 			tempStr = aList.get(0).getMessage();
-			if ( tempStr.length() > 4){
-				resultStr = tempStr.substring(0,4);
-				dayMsg1.setText(resultStr + "..");
-
-			}
-			else {
+//			if ( tempStr.length() > 4){
+//				resultStr = tempStr.substring(0,4);
+//				dayMsg1.setText(resultStr + "..");
+//
+//			}
+//			else {
 				dayMsg1.setText(tempStr);
-			}
+//			}
 
 			tempStr = aList.get(1).getMessage();
-			if ( tempStr.length() > 4){
-				resultStr = tempStr.substring(0,4);
-				dayMsg2.setText(resultStr + "..");
+//			if ( tempStr.length() > 4){
+//				resultStr = tempStr.substring(0,4);
+//				dayMsg2.setText(resultStr + "..");
 
-			}
-			else {
+//			}
+//			else {
 				dayMsg2.setText(tempStr);
-			}
+//			}
 			dayMsg3.setText("");
 			dayMsg4.setText("");
 		}
 		else if(size == 3) {
 			tempStr = aList.get(0).getMessage();
-			if ( tempStr.length() > 4){
-				resultStr = tempStr.substring(0,4);
-				dayMsg1.setText(resultStr + "..");
-
-			}
-			else {
+//			if ( tempStr.length() > 4){
+//				resultStr = tempStr.substring(0,4);
+//				dayMsg1.setText(resultStr + "..");
+//
+//			}
+//			else {
 				dayMsg1.setText(tempStr);
-			}
+//			}
 
 			tempStr = aList.get(1).getMessage();
-			if ( tempStr.length() > 4){
-				resultStr = tempStr.substring(0,4);
-				dayMsg2.setText(resultStr + "..");
-
-			}
-			else {
-				dayMsg2.setText(tempStr);
-			}
-
+//			if ( tempStr.length() > 4){
+//				resultStr = tempStr.substring(0,4);
+//				dayMsg2.setText(resultStr + "..");
+//
+//			}
+//			else {
+//				dayMsg2.setText(tempStr);
+//			}
+//
 			tempStr = aList.get(2).getMessage();
-			if ( tempStr.length() > 4){
-				resultStr = tempStr.substring(0,4);
-				dayMsg3.setText(resultStr + "..");
-			}
-			else {
+//			if ( tempStr.length() > 4){
+//				resultStr = tempStr.substring(0,4);
+//				dayMsg3.setText(resultStr + "..");
+//			}
+//			else {
 				dayMsg3.setText(tempStr);
-			}
+//			}
 			dayMsg4.setText("");
 		}
 		else if(size >= 4) {
 			tempStr = aList.get(0).getMessage();
-			if ( tempStr.length() > 4){
-				resultStr = tempStr.substring(0,4);
-				dayMsg1.setText(resultStr + "..");
-
-			}
-			else {
+//			if ( tempStr.length() > 4){
+//				resultStr = tempStr.substring(0,4);
+//				dayMsg1.setText(resultStr + "..");
+//
+//			}
+//			else {
 				dayMsg1.setText(tempStr);
-			}
+//			}
 
 			tempStr = aList.get(1).getMessage();
-			if ( tempStr.length() > 4){
-				resultStr = tempStr.substring(0,4);
-				dayMsg2.setText(resultStr + "..");
-
-			}
-			else {
+//			if ( tempStr.length() > 4){
+//				resultStr = tempStr.substring(0,4);
+//				dayMsg2.setText(resultStr + "..");
+//
+//			}
+//			else {
 				dayMsg2.setText(tempStr);
-			}
+//			}
 
 			tempStr = aList.get(2).getMessage();
-			if ( tempStr.length() > 4){
-				resultStr = tempStr.substring(0,4);
-				dayMsg3.setText(resultStr + "..");
-			}
-			else {
+//			if ( tempStr.length() > 4){
+//				resultStr = tempStr.substring(0,4);
+//				dayMsg3.setText(resultStr + "..");
+//			}
+//			else {
 				dayMsg3.setText(tempStr);
-			}
+//			}
 			tempStr = aList.get(3).getMessage();
 			dayMsg4.setText("..");
 		}
