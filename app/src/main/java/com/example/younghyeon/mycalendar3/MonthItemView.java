@@ -96,14 +96,19 @@ public class MonthItemView extends RelativeLayout {
 
 //			dayMsg1.setLayoutParams(params);
 			dayMsg1.setText(tempStr);
+			dayMsg1.setVisibility(VISIBLE);
+//			dayMsg1.setLayoutParams(params);
 
 //			}
 //			else {
 //				dayMsg1.setText(tempStr);
 //			}
 			dayMsg2.setText("");
+			dayMsg2.setVisibility(INVISIBLE);
 			dayMsg3.setText("");
+			dayMsg3.setVisibility(INVISIBLE);
 			dayMsg4.setText("");
+			dayMsg4.setVisibility(INVISIBLE);
 		}
 		else if(size == 2) {
 			tempStr = aList.get(0).getMessage();
@@ -114,6 +119,7 @@ public class MonthItemView extends RelativeLayout {
 //			}
 //			else {
 				dayMsg1.setText(tempStr);
+			dayMsg1.setVisibility(VISIBLE);
 //			}
 
 			tempStr = aList.get(1).getMessage();
@@ -124,9 +130,12 @@ public class MonthItemView extends RelativeLayout {
 //			}
 //			else {
 				dayMsg2.setText(tempStr);
+			dayMsg2.setVisibility(VISIBLE);
 //			}
 			dayMsg3.setText("");
 			dayMsg4.setText("");
+			dayMsg3.setVisibility(INVISIBLE);
+			dayMsg4.setVisibility(INVISIBLE);
 		}
 		else if(size == 3) {
 			tempStr = aList.get(0).getMessage();
@@ -137,37 +146,7 @@ public class MonthItemView extends RelativeLayout {
 //			}
 //			else {
 				dayMsg1.setText(tempStr);
-//			}
-
-			tempStr = aList.get(1).getMessage();
-//			if ( tempStr.length() > 4){
-//				resultStr = tempStr.substring(0,4);
-//				dayMsg2.setText(resultStr + "..");
-//
-//			}
-//			else {
-//				dayMsg2.setText(tempStr);
-//			}
-//
-			tempStr = aList.get(2).getMessage();
-//			if ( tempStr.length() > 4){
-//				resultStr = tempStr.substring(0,4);
-//				dayMsg3.setText(resultStr + "..");
-//			}
-//			else {
-				dayMsg3.setText(tempStr);
-//			}
-			dayMsg4.setText("");
-		}
-		else if(size >= 4) {
-			tempStr = aList.get(0).getMessage();
-//			if ( tempStr.length() > 4){
-//				resultStr = tempStr.substring(0,4);
-//				dayMsg1.setText(resultStr + "..");
-//
-//			}
-//			else {
-				dayMsg1.setText(tempStr);
+			dayMsg1.setVisibility(VISIBLE);
 //			}
 
 			tempStr = aList.get(1).getMessage();
@@ -178,6 +157,42 @@ public class MonthItemView extends RelativeLayout {
 //			}
 //			else {
 				dayMsg2.setText(tempStr);
+			dayMsg2.setVisibility(VISIBLE);
+//			}
+//
+			tempStr = aList.get(2).getMessage();
+//			if ( tempStr.length() > 4){
+//				resultStr = tempStr.substring(0,4);
+//				dayMsg3.setText(resultStr + "..");
+//			}
+//			else {
+				dayMsg3.setText(tempStr);
+			dayMsg3.setVisibility(VISIBLE);
+//			}
+			dayMsg4.setText("");
+			dayMsg4.setVisibility(INVISIBLE);
+		}
+		else if(size >= 4) {
+			tempStr = aList.get(0).getMessage();
+//			if ( tempStr.length() > 4){
+//				resultStr = tempStr.substring(0,4);
+//				dayMsg1.setText(resultStr + "..");
+//
+//			}
+//			else {
+				dayMsg1.setText(tempStr);
+			dayMsg1.setVisibility(VISIBLE);
+//			}
+
+			tempStr = aList.get(1).getMessage();
+//			if ( tempStr.length() > 4){
+//				resultStr = tempStr.substring(0,4);
+//				dayMsg2.setText(resultStr + "..");
+//
+//			}
+//			else {
+				dayMsg2.setText(tempStr);
+			dayMsg2.setVisibility(VISIBLE);
 //			}
 
 			tempStr = aList.get(2).getMessage();
@@ -187,9 +202,11 @@ public class MonthItemView extends RelativeLayout {
 //			}
 //			else {
 				dayMsg3.setText(tempStr);
+			dayMsg3.setVisibility(VISIBLE);
 //			}
 			tempStr = aList.get(3).getMessage();
 			dayMsg4.setText("..");
+//			dayMsg4.setVisibility(INVISIBLE);
 		}
 	}
 
@@ -198,6 +215,10 @@ public class MonthItemView extends RelativeLayout {
 		dayMsg2.setText("");
 		dayMsg3.setText("");
 		dayMsg4.setText("");
+		dayMsg1.setVisibility(INVISIBLE);
+		dayMsg2.setVisibility(INVISIBLE);
+		dayMsg3.setVisibility(INVISIBLE);
+		dayMsg4.setVisibility(INVISIBLE);
 	}
 
 	public void setTextColor(int color) {

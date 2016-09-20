@@ -15,7 +15,7 @@
 		/>
 	<TextView
 		android:id="@+id/dayText"
-		android:layout_width="wrap_content"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_alignParentTop="true"
 		android:layout_alignParentLeft="true"
@@ -28,33 +28,33 @@
 		android:layout_below="@+id/dayText"
 		android:textSize="11dp"
 		android:layout_alignParentLeft="true"
-		android:layout_width="wrap_content"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:maxLines="1"
 		android:ellipsize="end"
-		android:background="@android:color/holo_blue_bright"
+		android:background="#FFC19E"
 		/>
 	<TextView
 		android:id="@+id/dayMsg2"
 		android:layout_below="@+id/dayMsg1"
 		android:textSize="11dp"
 		android:layout_alignParentLeft="true"
-		android:layout_width="wrap_content"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:maxLines="1"
 		android:ellipsize="end"
-		android:background="@android:color/holo_green_light"
+		android:background="#CEF279"
 		/>
 	<TextView
 		android:id="@+id/dayMsg3"
 		android:layout_below="@+id/dayMsg2"
 		android:textSize="11dp"
 		android:layout_alignParentLeft="true"
-		android:layout_width="wrap_content"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:maxLines="1"
 		android:ellipsize="end"
-		android:background="@android:color/holo_orange_light"
+		android:background="#FFC4FF"
 		/>
 	<TextView
 		android:id="@+id/dayMsg4"
