@@ -308,7 +308,7 @@ public class CalendarMonthAdapter extends BaseAdapter {
 		// create a params
 		GridView.LayoutParams params = new GridView.LayoutParams(
 				GridView.LayoutParams.FILL_PARENT,
-				250);
+				ViewGroup.LayoutParams.MATCH_PARENT);
 		// 120이 반차는거
 		// 250이 다차는거
 

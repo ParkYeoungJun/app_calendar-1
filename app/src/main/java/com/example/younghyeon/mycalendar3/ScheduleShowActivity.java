@@ -142,13 +142,28 @@ public class ScheduleShowActivity  extends Activity {
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
                 String tempDateString = "";
-                Integer tempHour = 0;
-                Integer tempMin = 0;
+                int tempHour = 0;
+                int tempMin = 0;
                 try {
                     calendar.setTime(sdf.parse(date));
                     tempHour = calendar.get(Calendar.HOUR_OF_DAY);
                     tempMin = calendar.get(Calendar.MINUTE);
-                    tempDateString = tempHour.toString() + "시 " + tempMin.toString() + "분";
+
+                    String strHour = "";
+                    String strMin = "";
+                    if (tempHour < 10){
+                        strHour = "0" +Integer.toString(tempHour);
+                    } else {
+                        strHour = Integer.toString(tempHour);
+                    }
+                    if (tempMin < 10) {
+                        strMin = "0" +Integer.toString(tempMin);
+                    } else {
+                        strMin = Integer.toString(tempMin);
+                    }
+                    tempDateString = strHour + "시 " + strMin + "분";
+
+                  //  tempDateString = tempHour.toString() + "시 " + tempMin.toString() + "분";
                 } catch (java.text.ParseException ex) {
                     ex.printStackTrace();
                 }
@@ -242,9 +257,9 @@ public class ScheduleShowActivity  extends Activity {
                         String date = "";
                         Log.e("jsonerr", "date : " + date1);
                         if (curMonth < 10) {
-                            date = curYear + "-0" + curMonth + "-" + curDay + " " + strHour + ":" + strMin + ":00";
+                            date = curYear + "-0" + curMonth + "-" + String.format("%02d", curDay) + " " + String.format("%02d", hour) + ":" + String.format("%02d", min) + ":00";
                         } else {
-                            date = curYear + "-" + curMonth + "-" + curDay + " " + strHour + ":" + strMin + ":00";
+                            date = curYear + "-" + curMonth + "-" + String.format("%02d", curDay) + " " + String.format("%02d", hour) + ":" + String.format("%02d", min) + ":00";
                         }
                         intent.putExtra("date", date);
                         Log.e("jsonerr", "date : " + date);
@@ -401,20 +416,36 @@ public class ScheduleShowActivity  extends Activity {
             String memo = intent.getStringExtra("memo");
 
             Calendar c = Calendar.getInstance();
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
             try {
                 c.setTime(sdf.parse(date));
-                Integer hour = c.get(Calendar.HOUR_OF_DAY);
-                Integer min = c.get(Calendar.MINUTE);
+                int hour = c.get(Calendar.HOUR_OF_DAY);
+                int min = c.get(Calendar.MINUTE);
 
-                String strHour = hour.toString();
-                String strMin = min.toString();
+                String strHour = "";
+                String strMin = "";
 
+                if (hour < 10){
+                    strHour = "0" +Integer.toString(hour);
+                } else {
+                    strHour = Integer.toString(hour);
+                }
+                if (min < 10) {
+                    strMin = "0" +Integer.toString(min);
+                } else {
+                    strMin = Integer.toString(min);
+                }
                 String time = strHour + "시 " + strMin + "분";
-                h_schedules.put(TAG_DATE,time);
+                h_schedules.put(TAG_DATE, time);
 
                 date = "";
-                date = curYear + "-" +curMonth + "-" +curDay + " " + strHour +":"+ strMin +":00";
+                if (curMonth < 10) {
+                    date = curYear + "-0" + curMonth + "-" + String.format("%02d", curDay) + " " + String.format("%02d", hour) + ":" + String.format("%02d", min) + ":00";
+                } else {
+                    date = curYear + "-" + curMonth + "-" + String.format("%02d", curDay) + " " + String.format("%02d", hour) + ":" + String.format("%02d", min) + ":00";
+                }
+//                date = curYear + "-" +curMonth + "-" +curDay + " " + strHour +":"+ strMin +":00";
                 ScheduleListItem aItem = new ScheduleListItem(time, memo);
                 if (tempScheduleList == null) {
                     tempScheduleList = new ArrayList();
